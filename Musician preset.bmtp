@@ -1,8 +1,9 @@
+[Project]
+Version=1
+
 [Preset.0]
-Name=Musician MIDI Keyboard template
+Name=Musician MIDI
 Active=1
-Comments=
-PresetSwitchIgnore=0
 Name0=D2 down
 Incoming0=MID19026pp
 Outgoing0=KAM11000KSQ1000106E
@@ -419,14 +420,4 @@ Name103=Pedal up
 Incoming103=MID1B04000
 Outgoing103=KAM12100KSQ10001020
 Options103=Actv01Stop00OutO00
-
-[Project]
-Version=2
-Author=
-AuthorContact=
-Comments=
-AuthorWWW=
-AuthorCopyright=
-DefaultInPorts=MIDA00010005PCR 2
-DefaultOutPorts=MIDA0000
 
