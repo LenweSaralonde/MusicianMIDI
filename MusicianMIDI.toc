@@ -1,0 +1,16 @@
+## Interface: 80300
+## Title: Musician MIDI
+## Version: 0.0.1
+## RequiredDeps: Musician
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: MusicianMIDI_Storage
+
+core\MusicianMIDI.lua
+
+constants\MusicianMIDI.Constants.lua
+
+locale\locale.xml
+
+ui\MusicianMIDIKeyboard.xml
+ui\MusicianMIDIKeyboard.lua

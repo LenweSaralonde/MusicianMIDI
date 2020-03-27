@@ -1,0 +1,79 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+
+	<!-- Main frame -->
+
+	<Frame name="MusicianMIDIKeyboard" inherits="MusicianDialogTemplate" enableKeyboard="true">
+
+		<Size x="200" y="115" />
+
+		<Layers>
+			<Layer level="BACKGROUND">
+
+				<!-- Main title -->
+
+				<FontString name="$parentTitle" inherits="GameFontNormal">
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-15"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Frames>
+
+			<!-- Upper instrument selector -->
+
+			<Frame name="$parentUpperInstrument" inherits="MusicianInstrumentDropdownTemplate">
+				<Anchors>
+					<Anchor point="BOTTOM" y="18" relativePoint="BOTTOM" relativeTo="$parent" />
+				</Anchors>
+				<Scripts>
+					<OnLoad inherit="prepend">
+						MSA_DropDownMenu_SetWidth(self, 150)
+					</OnLoad>
+				</Scripts>
+			</Frame>
+
+			<!-- Live play button -->
+
+			<Button name="$parentLiveModeButton" inherits="MusicianIconTextButtonTemplate">
+				<Size x="105" y="24" />
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="$parentUpperInstrument" relativePoint="TOPLEFT" y="5" x="15" />
+				</Anchors>
+				<OnMouseDown inherit="prepend">
+					PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+				</OnMouseDown>
+			</Button>
+
+			<!-- Band sync play button -->
+
+			<Button name="$parentBandSyncButton" inherits="MusicianBandPlayButtonTemplate">
+				<Size x="60" y="24" />
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentUpperInstrument" relativePoint="TOPRIGHT"  y="5" x="-15" />
+				</Anchors>
+				<Scripts>
+					<OnClick inherit="append">
+						Musician.Live.ToggleBandSyncMode()
+					</OnClick>
+					<OnLoad inherit="append">
+						self.count:SetPoint("CENTER", self, "TOPRIGHT", -4, -4)
+						self.tooltipText = Musician.Msg.LIVE_SYNC
+					</OnLoad>
+				</Scripts>
+			</Button>
+
+		</Frames>
+
+		<Scripts>
+			<OnLoad inherit="prepend">
+				MusicianMIDIKeyboardTitle:SetText(MusicianMIDI.Msg.MIDI_KEYBOARD_TITLE)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+</Ui>
