@@ -1,5 +1,6 @@
 ## Interface: 80300
 ## Title: Musician MIDI
+## Notes: Perform live music in Musician using your MIDI keyboard
 ## Version: 0.0.1
 ## RequiredDeps: Musician
 ## DefaultState: Enabled
