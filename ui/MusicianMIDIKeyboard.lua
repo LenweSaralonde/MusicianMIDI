@@ -40,7 +40,9 @@ local function initLayerControls(layer)
 		Musician.Keyboard.SetInstrument(layer, instrument)
 	end
 	hooksecurefunc(Musician.Keyboard, "SetInstrument", function(layer, instrument)
-		selector.UpdateValue(instrument)
+		if layer == LAYER.UPPER then -- Only upper layer is supported for now
+			selector.UpdateValue(instrument)
+		end
 	end)
 
 	selector.SetValue(instrument)
