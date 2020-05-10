@@ -11,6 +11,12 @@ local MusicianButtonGetMenu
 function MusicianMIDI:OnInitialize()
 	Musician.Utils.Debug(MODULE_NAME, 'MusicianMIDI', 'OnInitialize')
 
+	-- Incompatible Musician version
+	if Musician.Live.SetSustain == nil then
+		Musician.Utils.Error(MusicianMIDI.Msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION)
+		return
+	end
+
 	-- Initialize keyboard
 	MusicianMIDI.Keyboard.Init()
 

@@ -19,7 +19,6 @@ local ICON = {
 }
 
 local sustain = false
-local sustainedNotes = {}
 
 --- Init controls for a layer
 -- @param layer (int)
@@ -137,19 +136,10 @@ MusicianMIDI.Keyboard.OnPhysicalKey = function(keyValue, down)
 		return
  	end
 
-	-- Sustain
+	-- Sustain (pedal)
 	if keyValue == 'SPACE' then
-		sustain = down
-
-		-- Release all sustained notes
-		if not(sustain) then
-			local note
-			for _, note in pairs(sustainedNotes) do
-				Musician.Live.NoteOff(note[1], note[2], note[3], false)
-			end
-			sustainedNotes = {}
-		end
-
+		Musician.Live.SetSustain(down, LAYER.UPPER)
+		Musician.Live.SetSustain(down, LAYER.LOWER)
 		MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
 		return
 	end
@@ -160,18 +150,9 @@ MusicianMIDI.Keyboard.OnPhysicalKey = function(keyValue, down)
 		local instrument = Musician.Keyboard.config.instrument[layer]
 		local noteId = layer .. noteKey .. instrument
 		if down then
-			-- Release previously sustained note
-			if sustain and sustainedNotes[noteId] then
-				Musician.Live.NoteOff(noteKey, layer, instrument, false)
-				sustainedNotes[noteId] = nil
-			end
 			Musician.Live.NoteOn(noteKey, layer, instrument, false)
 		else
-			if not(sustain) then
-				Musician.Live.NoteOff(noteKey, layer, instrument, false)
-			else
-				sustainedNotes[noteId] = { noteKey, layer, instrument }
-			end
+			Musician.Live.NoteOff(noteKey, layer, instrument, false)
 		end
 
 		MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
