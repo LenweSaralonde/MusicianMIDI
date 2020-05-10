@@ -158,9 +158,6 @@ MusicianMIDI.Keyboard.OnPhysicalKey = function(keyValue, down)
 	local noteKey = MusicianMIDI.KEY_BINDINGS[keyValue]
 	if noteKey ~= nil then
 		local instrument = Musician.Keyboard.config.instrument[layer]
-		if instrument < 127 then
-			noteKey = noteKey + 12 -- TODO: use note names instead of invalid MIDI codes
-		end
 		local noteId = layer .. noteKey .. instrument
 		if down then
 			-- Release previously sustained note
