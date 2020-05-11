@@ -72,6 +72,8 @@ local function initLiveModeButton()
 
 	-- Update the Live button when the standard live keyboard button is updated too
 	hooksecurefunc(MusicianKeyboardLiveModeButton, "SetText", updateLiveModeButton)
+	hooksecurefunc(MusicianKeyboardLiveModeButton, "Disable", updateLiveModeButton)
+	hooksecurefunc(MusicianKeyboardLiveModeButton, "Enable", updateLiveModeButton)
 
 	updateLiveModeButton()
 end
