@@ -67,13 +67,11 @@ local function initLiveModeButton()
 	local button = MusicianMIDIKeyboardLiveModeButton
 
 	MusicianMIDIKeyboardLiveModeButton:SetScript("OnClick", function()
-		MusicianKeyboardLiveModeButton:GetScript("OnClick")()
+		Musician.Live.Enable(not(Musician.Live.IsEnabled()))
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	end)
 
-	-- Update the Live button when the standard live keyboard button is updated too
-	hooksecurefunc(MusicianKeyboardLiveModeButton, "SetText", updateLiveModeButton)
-	hooksecurefunc(MusicianKeyboardLiveModeButton, "Disable", updateLiveModeButton)
-	hooksecurefunc(MusicianKeyboardLiveModeButton, "Enable", updateLiveModeButton)
+	MusicianMIDI.Keyboard:RegisterMessage(Musician.Events.LiveModeChange, updateLiveModeButton)
 
 	updateLiveModeButton()
 end
