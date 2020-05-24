@@ -1,4 +1,6 @@
 MusicianMIDI.KEY_BINDINGS = {
+	['BACKSPACE'] = 36,
+	['TAB'] = 37,
 	['NUMPADDECIMAL'] = 38,
 	['NUMPADPLUS'] = 39,
 	['NUMPADMINUS'] = 40,
@@ -50,6 +52,14 @@ MusicianMIDI.KEY_BINDINGS = {
 	['8'] = 86,
 	['9'] = 87,
 	['0'] = 88,
+	['HOME'] = 89,
+	['END'] = 90,
+	['PAGEDOWN'] = 91,
+	['PAGEUP'] = 92,
+	['LEFT'] = 93,
+	['UP'] = 94,
+	['RIGHT'] = 95,
+	['DOWN'] = 96,
 }
 
 MusicianMIDI.Locale = {}
