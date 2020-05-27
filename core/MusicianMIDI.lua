@@ -6,9 +6,9 @@ Musician.AddModule(MODULE_NAME)
 local MusicianGetCommands
 local MusicianButtonGetMenu
 
---- OnInitialize
+--- OnEnable
 --
-function MusicianMIDI:OnInitialize()
+function MusicianMIDI:OnEnable()
 	Musician.Utils.Debug(MODULE_NAME, 'MusicianMIDI', 'OnInitialize')
 
 	-- Incompatible Musician version

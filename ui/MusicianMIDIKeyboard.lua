@@ -23,36 +23,27 @@ local transpose = {
 	[LAYER.LOWER] = 0,
 }
 
+local instrument = {
+	[LAYER.UPPER] = 0,
+	[LAYER.LOWER] = 0,
+}
+
 local sustain = false
 
 --- Init controls for a layer
 -- @param layer (int)
 local function initLayerControls(layer)
 	local varNamePrefix = "MusicianMIDIKeyboard" .. LayerNames[layer]
-	local config = Musician.Keyboard.config
-	local instrument = config.instrument[layer]
 
 	-- Instrument selector
-	local dropdownTooltipText
-
-	if layer == LAYER.LOWER then
-		dropdownTooltipText = Musician.Msg.CHANGE_LOWER_INSTRUMENT
-	elseif layer == LAYER.UPPER then
-		dropdownTooltipText = Musician.Msg.CHANGE_UPPER_INSTRUMENT
-	end
-
 	local instrumentSelector = _G[varNamePrefix .. "Instrument"]
-	instrumentSelector.OnChange = function(instrument)
-		Musician.Keyboard.SetInstrument(layer, instrument)
+	instrumentSelector.OnChange = function(i)
+		Musician.Live.AllNotesOff(layer)
+		instrument[layer] = i
 	end
-	hooksecurefunc(Musician.Keyboard, "SetInstrument", function(layer, instrument)
-		if layer == LAYER.UPPER then -- Only upper layer is supported for now
-			instrumentSelector.UpdateValue(instrument)
-		end
-	end)
 
-	instrumentSelector.SetValue(instrument)
-	instrumentSelector.tooltipText = dropdownTooltipText
+	instrumentSelector.SetValue(instrument[layer])
+	instrumentSelector.tooltipText = MusicianMIDI.Msg.SELECT_INSTRUMENT
 
 	-- Transpose selector
 	local transposeSelector = _G[varNamePrefix .. "Transpose"]
@@ -192,12 +183,11 @@ MusicianMIDI.Keyboard.OnPhysicalKey = function(keyValue, down)
 	local noteKey = MusicianMIDI.KEY_BINDINGS[keyValue]
 	if noteKey ~= nil then
 		noteKey = noteKey + transpose[layer]
-		local instrument = Musician.Keyboard.config.instrument[layer]
-		local noteId = layer .. noteKey .. instrument
+		local noteId = layer .. noteKey .. instrument[layer]
 		if down then
-			Musician.Live.NoteOn(noteKey, layer, instrument, false)
+			Musician.Live.NoteOn(noteKey, layer, instrument[layer], false)
 		else
-			Musician.Live.NoteOff(noteKey, layer, instrument, false)
+			Musician.Live.NoteOff(noteKey, layer, instrument[layer], false)
 		end
 
 		MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
