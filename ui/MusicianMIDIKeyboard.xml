@@ -4,7 +4,7 @@
 
 	<Frame name="MusicianMIDIKeyboard" inherits="MusicianDialogTemplate" enableKeyboard="true">
 
-		<Size x="200" y="115" />
+		<Size x="235" y="115" />
 
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -29,11 +29,24 @@
 
 			<Frame name="$parentUpperInstrument" inherits="MusicianInstrumentDropdownTemplate">
 				<Anchors>
-					<Anchor point="BOTTOM" y="18" relativePoint="BOTTOM" relativeTo="$parent" />
+					<Anchor point="BOTTOM" y="18" x="28" relativePoint="BOTTOM" relativeTo="$parent" />
 				</Anchors>
 				<Scripts>
 					<OnLoad inherit="prepend">
-						MSA_DropDownMenu_SetWidth(self, 150)
+						MSA_DropDownMenu_SetWidth(self, 115)
+					</OnLoad>
+				</Scripts>
+			</Frame>
+
+			<!-- Upper transpose selector -->
+
+			<Frame name="$parentUpperTranspose" inherits="MusicianDropDownMenuTooltipTemplate">
+				<Anchors>
+					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentUpperInstrument" x="32" />
+				</Anchors>
+				<Scripts>
+					<OnLoad inherit="prepend">
+						MSA_DropDownMenu_SetWidth(self, 40)
 					</OnLoad>
 				</Scripts>
 			</Frame>
@@ -43,7 +56,7 @@
 			<Button name="$parentLiveModeButton" inherits="MusicianIconTextButtonTemplate">
 				<Size x="105" y="24" />
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentUpperInstrument" relativePoint="TOPLEFT" y="5" x="15" />
+					<Anchor point="BOTTOMLEFT" relativeTo="$parentUpperTranspose" relativePoint="TOPLEFT" y="5" x="15" />
 				</Anchors>
 				<OnMouseDown inherit="prepend">
 					PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)

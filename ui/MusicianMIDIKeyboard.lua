@@ -18,6 +18,11 @@ local ICON = {
 	["LIVE_MODE"] = Musician.Icons.Speaker
 }
 
+local transpose = {
+	[LAYER.UPPER] = 0,
+	[LAYER.LOWER] = 0,
+}
+
 local sustain = false
 
 --- Init controls for a layer
@@ -26,8 +31,9 @@ local function initLayerControls(layer)
 	local varNamePrefix = "MusicianMIDIKeyboard" .. LayerNames[layer]
 	local config = Musician.Keyboard.config
 	local instrument = config.instrument[layer]
+
+	-- Instrument selector
 	local dropdownTooltipText
-	local selector = _G[varNamePrefix .. "Instrument"]
 
 	if layer == LAYER.LOWER then
 		dropdownTooltipText = Musician.Msg.CHANGE_LOWER_INSTRUMENT
@@ -35,18 +41,54 @@ local function initLayerControls(layer)
 		dropdownTooltipText = Musician.Msg.CHANGE_UPPER_INSTRUMENT
 	end
 
-	-- Instrument selector
-	selector.OnChange = function(instrument)
+	local instrumentSelector = _G[varNamePrefix .. "Instrument"]
+	instrumentSelector.OnChange = function(instrument)
 		Musician.Keyboard.SetInstrument(layer, instrument)
 	end
 	hooksecurefunc(Musician.Keyboard, "SetInstrument", function(layer, instrument)
 		if layer == LAYER.UPPER then -- Only upper layer is supported for now
-			selector.UpdateValue(instrument)
+			instrumentSelector.UpdateValue(instrument)
 		end
 	end)
 
-	selector.SetValue(instrument)
-	selector.tooltipText = dropdownTooltipText
+	instrumentSelector.SetValue(instrument)
+	instrumentSelector.tooltipText = dropdownTooltipText
+
+	-- Transpose selector
+	local transposeSelector = _G[varNamePrefix .. "Transpose"]
+	local transposeValues = {"+3", "+2", "+1", "0", "-1", "-2", "-3"}
+	transposeSelector.tooltipText = MusicianMIDI.Msg.TRANSPOSE_INSTRUMENT
+
+	transposeSelector.SetValue = function(value)
+		transposeSelector.SetIndex(4 - floor(value / 12))
+	end
+
+	transposeSelector.SetIndex = function(index)
+		transposeSelector.index = index
+		Musician.Live.AllNotesOff(layer)
+		transpose[layer] = (-index + 4) * 12
+		MSA_DropDownMenu_SetText(transposeSelector, transposeValues[index])
+	end
+
+	transposeSelector.OnClick = function(self, arg1, arg2, checked)
+		transposeSelector.SetIndex(arg1)
+	end
+
+	transposeSelector.GetItems = function(frame, level, menuList)
+		local info = MSA_DropDownMenu_CreateInfo()
+		info.func = transposeSelector.OnClick
+
+		local index, label
+		for index, label in pairs(transposeValues) do
+			info.text = label
+			info.arg1 = index
+			info.checked = transposeSelector.index == index
+			MSA_DropDownMenu_AddButton(info)
+		end
+	end
+
+	MSA_DropDownMenu_Initialize(transposeSelector, transposeSelector.GetItems)
+	transposeSelector.SetValue(transpose[layer])
 end
 
 --- Update texts and icons for live and solo modes
@@ -149,6 +191,7 @@ MusicianMIDI.Keyboard.OnPhysicalKey = function(keyValue, down)
 	-- Note on/note off
 	local noteKey = MusicianMIDI.KEY_BINDINGS[keyValue]
 	if noteKey ~= nil then
+		noteKey = noteKey + transpose[layer]
 		local instrument = Musician.Keyboard.config.instrument[layer]
 		local noteId = layer .. noteKey .. instrument
 		if down then
