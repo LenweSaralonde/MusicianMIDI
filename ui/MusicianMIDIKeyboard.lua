@@ -174,7 +174,6 @@ MusicianMIDI.Keyboard.OnPhysicalKey = function(keyValue, down)
 	-- Sustain (pedal)
 	if keyValue == 'SPACE' then
 		Musician.Live.SetSustain(down, LAYER.UPPER)
-		Musician.Live.SetSustain(down, LAYER.LOWER)
 		MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
 		return
 	end
