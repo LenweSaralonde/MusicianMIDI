@@ -49,7 +49,7 @@ local function initLayerControls(layer)
 	-- Transpose selector
 	local transposeSelector = _G[varNamePrefix .. "Transpose"]
 	local transposeValues = {"+3", "+2", "+1", "0", "-1", "-2", "-3"}
-	transposeSelector.tooltipText = MusicianMIDI.Msg.TRANSPOSE_INSTRUMENT
+	transposeSelector.tooltipText = MusicianMIDI.Msg.INSTRUMENT_OCTAVE
 
 	transposeSelector.SetValue = function(value)
 		transposeSelector.SetIndex(4 - floor(value / 12))
