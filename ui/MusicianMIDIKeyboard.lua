@@ -151,9 +151,11 @@ function MusicianMIDI.Keyboard.Init()
 	MusicianMIDI.Keyboard:RegisterMessage(Musician.Events.LiveNoteOff, MusicianMIDI.Keyboard.OnLiveNoteOff)
 
 	-- Keep track of sustained layers
-	hooksecurefunc(Musician.Live, 'SetSustain', function(enable, layer)
+	local setSustain = Musician.Live.SetSustain
+	Musician.Live.SetSustain = function(enable, layer, ...)
 		sustainedLayers[layer] = enable
-	end)
+		setSustain(enable, layer, ...)
+	end
 end
 
 --- OnPhysicalKeyDown
