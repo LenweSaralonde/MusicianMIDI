@@ -28,7 +28,8 @@ local instrument = {
 	[LAYER.LOWER] = 0,
 }
 
-local sustain = false
+local notesOn = {}
+local sustainedLayers = {}
 
 --- Init controls for a layer
 -- @param layer (int)
@@ -142,6 +143,17 @@ function MusicianMIDI.Keyboard.Init()
 	initLiveModeButton()
 	initBandSyncButton()
 	initLayerControls(LAYER.UPPER)
+
+	-- Init events
+	Musician.Keyboard:UnregisterMessage(Musician.Events.LiveNoteOn, Musician.Keyboard.OnLiveNoteOn)
+	Musician.Keyboard:UnregisterMessage(Musician.Events.LiveNoteOff, Musician.Keyboard.OnLiveNoteOff)
+	MusicianMIDI.Keyboard:RegisterMessage(Musician.Events.LiveNoteOn, MusicianMIDI.Keyboard.OnLiveNoteOn)
+	MusicianMIDI.Keyboard:RegisterMessage(Musician.Events.LiveNoteOff, MusicianMIDI.Keyboard.OnLiveNoteOff)
+
+	-- Keep track of sustained layers
+	hooksecurefunc(Musician.Live, 'SetSustain', function(enable, layer)
+		sustainedLayers[layer] = enable
+	end)
 end
 
 --- OnPhysicalKeyDown
@@ -182,11 +194,15 @@ MusicianMIDI.Keyboard.OnPhysicalKey = function(keyValue, down)
 	local noteKey = MusicianMIDI.KEY_BINDINGS[keyValue]
 	if noteKey ~= nil then
 		noteKey = noteKey + transpose[layer]
-		local noteId = layer .. noteKey .. instrument[layer]
-		if down then
-			Musician.Live.NoteOn(noteKey, layer, instrument[layer], false)
-		else
-			Musician.Live.NoteOff(noteKey, layer, instrument[layer], false)
+
+		if noteKey >= Musician.MIN_KEY and noteKey <= Musician.MAX_KEY then
+			local noteId = layer .. noteKey
+			if down then
+				notesOn[noteId] = true
+				Musician.Live.NoteOn(noteKey, layer, instrument[layer], false)
+			else
+				Musician.Live.NoteOff(noteKey, layer, instrument[layer], false)
+			end
 		end
 
 		MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
@@ -197,3 +213,23 @@ MusicianMIDI.Keyboard.OnPhysicalKey = function(keyValue, down)
 	MusicianMIDIKeyboard:SetPropagateKeyboardInput(true)
 end
 
+--- MusicianMIDI.Keyboard.OnLiveNoteOn
+-- Filter LiveNoteOn events coming from the MIDI keyboard to the standard live keyboard interface
+MusicianMIDI.Keyboard.OnLiveNoteOn = function(event, key, layer, instrumentData, isChordNote)
+	local noteId = layer .. key
+	if notesOn[noteId] then return end
+	Musician.Keyboard.OnLiveNoteOn(event, key, layer, instrumentData, isChordNote)
+end
+
+--- MusicianMIDI.Keyboard.OnLiveNoteOff
+-- Filter LiveNoteOff events coming from the MIDI keyboard to the standard live keyboard interface
+MusicianMIDI.Keyboard.OnLiveNoteOff = function(event, key, layer)
+	local noteId = layer .. key
+	if notesOn[noteId] then
+		if not(sustainedLayers[layer]) then
+			notesOn[noteId] = nil
+		end
+		return
+	end
+	Musician.Keyboard.OnLiveNoteOff(event, key, layer)
+end
