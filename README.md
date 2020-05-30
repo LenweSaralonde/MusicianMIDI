@@ -22,3 +22,13 @@ In Bome MIDI Translator __Pro__:
 ## How to play
 In WoW, click on the Musician minimap icon then **Open MIDI keyboard** or type `/mus midi`. You can play live using your MIDI keyboard as long as the MIDI keyboard window is focused in game.
 
+## Deal with latency
+As with the regular live keyboard interface, you may experience some latency between the moment you press a key and when the sound actually starts playing, which can be awkward for a live performance. Unlike music applications, the WoW client does not support low latency ASIO drivers.
+
+As a workaround, you can connect your MIDI keyboard to a software synthesizer (in addition to Bome MIDI Translator) and use it for audio feedback while playing with Musician.
+
+Every instrument in Musician has a soundfont version in SFZ format, located under Musician's `soundfonts` folder.
+
+[Sforzando](https://www.plogue.com/products/sforzando.html) is a free SFZ soundfont player you can use as a standalone software synth to play Musician's instruments. Just assign the same **Input MIDI device** in Sforzando as in Bome MIDI Translator (under **Tools** > **Settings**) and you're ready to go.
+
+To play an instrument, select it in game then drag and drop its .sfz file into Sforzando. Don't forget to mute Musician's audio in game by right clicking on the minimap icon to avoid hearing the sound twice.
