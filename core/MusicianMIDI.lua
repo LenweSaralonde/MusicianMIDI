@@ -23,6 +23,8 @@ function MusicianMIDI:OnEnable()
 	-- Hook Musician functions
 	MusicianButtonGetMenu = MusicianButton.GetMenu
 	MusicianButton.GetMenu = MusicianMIDI.GetMenu
+	MusicianGetCommands = Musician.GetCommands
+	Musician.GetCommands = MusicianMIDI.GetCommands
 end
 
 --- Return main menu elements
@@ -46,4 +48,26 @@ function MusicianMIDI.GetMenu()
 	end
 
 	return menu
+end
+
+--- Get command definitions
+-- @return commands (table)
+function MusicianMIDI.GetCommands()
+	local commands = MusicianGetCommands()
+
+	local liveIndex, index, command
+	for index, command in pairs(commands) do
+		if command.text == Musician.Msg.COMMAND_LIVE_KEYBOARD then
+			table.insert(commands, index + 1, {
+				command = { "midi", "livemidi", "midilive", "midikeyboard" },
+				text = MusicianMIDI.Msg.COMMAND_LIVE_KEYBOARD,
+				func = function()
+					MusicianMIDIKeyboard:Show()
+				end
+			})
+			break
+		end
+	end
+
+	return commands
 end

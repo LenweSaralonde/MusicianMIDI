@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.0.1
+--------
+* Added missing `/mus midi` command
+
 v1.0.0
 --------
 MVP release

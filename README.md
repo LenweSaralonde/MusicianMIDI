@@ -20,4 +20,5 @@ In Bome MIDI Translator __Pro__:
 * Select your MIDI input device on the right column
 
 ## How to play
-In WoW, click on the Musician minimap icon then **Open MIDI keyboard**. You can play live using your MIDI keyboard as long as the MIDI keyboard window is focused in game.
+In WoW, click on the Musician minimap icon then **Open MIDI keyboard** or type `/mus midi`. You can play live using your MIDI keyboard as long as the MIDI keyboard window is focused in game.
+
