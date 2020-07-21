@@ -9,8 +9,6 @@ Install [Bome MIDI Translator Classic](https://www.bome.com/products/mtclassic) 
 The __Classic__ version is recommended if you run Windows because it's easy to use and works without paid license while the __Pro__ version is more complex and should be restarted every 20 minutes in trial mode. You can get a free license for any version if you [send a postcard to the developers](https://www.bome.com/postcardware).
 
 ## Configure MIDI input device
-> ### Important notice
-> Make sure your MIDI keyboard is set on the ___MIDI channel 1___ otherwise it won't work.
 
 ### For Bome MIDI Translator __Classic__:
 1. Open the **Midi In** menu
