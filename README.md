@@ -9,15 +9,18 @@ Install [Bome MIDI Translator Classic](https://www.bome.com/products/mtclassic) 
 The __Classic__ version is easy to use and works without paid license while the __Pro__ version is more complex and should be restarted every 20 minutes in trial mode. You can get a free license for any version if you [send a postcard to the developers](https://www.bome.com/postcardware).
 
 ## Configure MIDI input device
-In Bome MIDI Translator __Classic__:
-* Open the **Midi In** menu
-* Select your MIDI input device
+> ### Important notice
+> Make sure your MIDI keyboard is set on the ___MIDI channel 1___ otherwise it won't work.
 
-In Bome MIDI Translator __Pro__:
-* Open the provided `Musician preset.bmtp` file
-* Click on __Musician preset.bmtp__ on the left column
-* Open the **MIDI** menu then click **Project Default MIDI Ports**
-* Select your MIDI input device on the right column
+### For Bome MIDI Translator __Classic__:
+1. Open the **Midi In** menu
+2. Select your MIDI input device
+
+### For Bome MIDI Translator __Pro__:
+1. Open the provided `Musician preset.bmtp` file
+2. Click on __Musician preset.bmtp__ on the left column
+3. Open the **MIDI** menu then click **Project Default MIDI Ports**
+4. Select your MIDI input device on the right column
 
 ## How to play
 In WoW, click on the Musician minimap icon then **Open MIDI keyboard** or type `/mus midi`. You can play live using your MIDI keyboard as long as the MIDI keyboard window is focused in game.
