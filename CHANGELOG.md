@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.0.2
+--------
+* Added one MIDI translator preset per MIDI channel
+
 v1.0.1
 --------
 * Added missing `/mus midi` command
