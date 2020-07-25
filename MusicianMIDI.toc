@@ -1,4 +1,4 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: Musician MIDI
 ## Notes: Perform live music in Musician using your MIDI keyboard
 ## Version: 1.0.2
