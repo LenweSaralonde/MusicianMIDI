@@ -1,7 +1,7 @@
 ## Interface: 80300
-## Title: Musician MIDI
-## Notes: Perform live music in Musician using your MIDI keyboard
-## Version: 1.0.2
+## Title: Musician MIDI (experimental)
+## Notes: Control Musician live using any MIDI source
+## Version: 2.0.0-alpha
 ## RequiredDeps: Musician
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
@@ -13,5 +13,5 @@ constants\MusicianMIDI.Constants.lua
 
 locale\locale.xml
 
-ui\MusicianMIDIKeyboard.xml
-ui\MusicianMIDIKeyboard.lua
+ui\MusicianMIDI_Frame.xml
+ui\MusicianMIDI_Frame.lua

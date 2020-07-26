@@ -2,9 +2,9 @@
 
 	<!-- Main frame -->
 
-	<Frame name="MusicianMIDIKeyboard" inherits="MusicianDialogTemplate" enableKeyboard="true">
+	<Frame name="MusicianMIDI_Frame" inherits="MusicianDialogTemplate" enableKeyboard="true">
 
-		<Size x="235" y="115" />
+		<Size x="235" y="70" />
 
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -25,38 +25,12 @@
 
 		<Frames>
 
-			<!-- Upper instrument selector -->
-
-			<Frame name="$parentUpperInstrument" inherits="MusicianInstrumentDropdownTemplate">
-				<Anchors>
-					<Anchor point="BOTTOM" y="18" x="28" relativePoint="BOTTOM" relativeTo="$parent" />
-				</Anchors>
-				<Scripts>
-					<OnLoad inherit="prepend">
-						MSA_DropDownMenu_SetWidth(self, 115)
-					</OnLoad>
-				</Scripts>
-			</Frame>
-
-			<!-- Upper transpose selector -->
-
-			<Frame name="$parentUpperTranspose" inherits="MusicianDropDownMenuTooltipTemplate">
-				<Anchors>
-					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentUpperInstrument" x="32" />
-				</Anchors>
-				<Scripts>
-					<OnLoad inherit="prepend">
-						MSA_DropDownMenu_SetWidth(self, 40)
-					</OnLoad>
-				</Scripts>
-			</Frame>
-
 			<!-- Live play button -->
 
 			<Button name="$parentLiveModeButton" inherits="MusicianIconTextButtonTemplate">
 				<Size x="105" y="24" />
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentUpperTranspose" relativePoint="TOPLEFT" y="5" x="15" />
+					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" y="-30" x="15" />
 				</Anchors>
 				<OnMouseDown inherit="prepend">
 					PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
@@ -68,7 +42,7 @@
 			<Button name="$parentBandSyncButton" inherits="MusicianBandPlayButtonTemplate">
 				<Size x="60" y="24" />
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="$parentUpperInstrument" relativePoint="TOPRIGHT"  y="5" x="-15" />
+					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT"  y="-30" x="-15" />
 				</Anchors>
 				<Scripts>
 					<OnClick inherit="append">
@@ -80,12 +54,11 @@
 					</OnLoad>
 				</Scripts>
 			</Button>
-
 		</Frames>
 
 		<Scripts>
 			<OnLoad inherit="prepend">
-				MusicianMIDIKeyboardTitle:SetText(MusicianMIDI.Msg.MIDI_KEYBOARD_TITLE)
+				MusicianMIDI_FrameTitle:SetText(MusicianMIDI.Msg.LIVE_MIDI_TITLE)
 			</OnLoad>
 		</Scripts>
 	</Frame>

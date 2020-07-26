@@ -1,126 +1,120 @@
 'use strict'
 
-const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-
-const MAPPING = [
-	'1008',
-	'1009',
-	'106E',
-	'106B',
-	'106D',
-	'106A',
-	'116F',
-	'1060',
-	'1061',
-	'1062',
-	'1063',
-	'1064',
-	'1065',
-	'1066',
-	'1067',
-	'1068',
-	'1069',
-	'1041',
-	'1042',
-	'1043',
-	'1044',
-	'1045',
-	'1046',
-	'1047',
-	'1048',
-	'1049',
-	'104A',
-	'104B',
-	'104C',
-	'104D',
-	'104E',
-	'104F',
-	'1050',
-	'1051',
-	'1052',
-	'1053',
-	'1054',
-	'1055',
-	'1056',
-	'1057',
-	'1058',
-	'1059',
-	'105A',
-	'1031',
-	'1032',
-	'1033',
-	'1034',
-	'1035',
-	'1036',
-	'1037',
-	'1038',
-	'1039',
-	'1030',
-	'1124',
-	'1123',
-	'1122',
-	'1121',
-	'1125',
-	'1126',
-	'1127',
-	'1128',
+const KEY_NIBBLES = [
+	'060260', // Numpad 0
+	'061261', // Numpad 1
+	'062262', // Numpad 2
+	'063263', // Numpad 3
+	'064264', // Numpad 4
+	'065265', // Numpad 5
+	'066266', // Numpad 6
+	'067267', // Numpad 7
+	'068268', // Numpad 8
+	'069269', // Numpad 9
+	'06E26E', // Numpad .
+	'16F36F', // Numpad /
+	'06A26A', // Numpad *
+	'06D26D', // Numpad -
+	'06B26B', // Numpad +
+	'12D32D', // Insert
 ];
 
-const START = 36;
+const MESSAGES_2 = [
+	'C', // Cx pp      Program change
+];
 
-let bmtp =
-	`[Project]\n` +
-	`Version=1\n`;
+const MESSAGES_3 = [
+	'8', // 8x nn vv   Note nn off
+	'9', // 9x nn vv   Note nn on, Volume vv
+	'B', // Bx nn vv   Controller
+	'E', // Ex v1 v2   Pitch Bender
+];
 
-let c;
-for (c = 0; c < 16; c++) {
-	bmtp +=
-		`\n[Preset.${c}]\n` +
-		`Name=Musician MIDI (channel ${c + 1})\n` +
-		`Active=1\n`;
+const KEYSTROKE_COMMAND = 'KAM10100KSQ10004'; // 2 keystrokes
 
-	const cHex = c.toString(16).toUpperCase();
-	let rule = 0;
-	let i;
-	for (i in MAPPING) {
-		const compKeyCode = MAPPING[i];
-		const midiKey = START + parseInt(i, 10);
-		const midiKeyCode = midiKey.toString(16).toUpperCase();
-		const octave = Math.floor((midiKey - 12) / 12);
-		const note = (midiKey - 12) % 12;
-		const midiKeyName = NOTE_NAMES[note] + octave;
-
-		bmtp +=
-			`Name${rule}=${midiKeyName} up\n` +
-			`Incoming${rule}=MID18${cHex}${midiKeyCode}pp\n` +
-			`Outgoing${rule}=KAM12100KSQ1000${compKeyCode}\n` +
-			`Options${rule}=Actv01Stop00OutO00\n`;
-		rule++;
-		bmtp +=
-			`Name${rule}=${midiKeyName} up (alternate)\n` +
-			`Incoming${rule}=MID19${cHex}${midiKeyCode}00\n` +
-			`Outgoing${rule}=KAM12100KSQ1000${compKeyCode}\n` +
-			`Options${rule}=Actv01Stop01OutO00\n`;
-		rule++;
-		bmtp +=
-			`Name${rule}=${midiKeyName} down\n` +
-			`Incoming${rule}=MID19${cHex}${midiKeyCode}pp\n` +
-			`Outgoing${rule}=KAM11000KSQ1000${compKeyCode}\n` +
-			`Options${rule}=Actv01Stop00OutO00\n`;
-		rule++;
-	}
-
-	bmtp +=
-		`Name${rule}=Pedal down\n` +
-		`Incoming${rule}=MID1B${cHex}407F\n` +
-		`Outgoing${rule}=KAM11000KSQ10001020\n` +
-		`Options${rule}=Actv01Stop00OutO00\n`;
-	rule++;
-	bmtp +=
-		`Name${rule}=Pedal up\n` +
-		`Incoming${rule}=MID1B${cHex}4000\n` +
-		`Outgoing${rule}=KAM12100KSQ10001020\n` +
-		`Options${rule}=Actv01Stop00OutO00\n`;
+/**
+ * Set translator rule
+ * @param {array} rules
+ * @param {string} name
+ * @param {string} input
+ * @param {string} output
+ * @param {boolean} [isFinal=false]
+ */
+function setRule(rules, name, input, output, isFinal = false) {
+	rules.push([name, input, output, isFinal]);
 }
 
-process.stdout.write(bmtp);
+/**
+ * Generate BMTP for preset
+ * @param {int} presetId
+ * @param {string} presetName
+ * @param {array} rules
+ * @return {string}
+ */
+function getPreset(presetId, presetName, rules) {
+	let bmtp =
+		`[Preset.${presetId}]\n` +
+		`Name=${presetName}\n` +
+		`Active=1\n`;
+
+	for (let ruleId = 0; ruleId < rules.length; ruleId++) {
+		const [name, input, output, isFinal] = rules[ruleId];
+		bmtp +=
+			`Name${ruleId}=${name}\n` +
+			`Incoming${ruleId}=MID1${input}\n` +
+			`Outgoing${ruleId}=${output}\n` +
+			`Options${ruleId}=Actv01Stop0${isFinal?1:0}OutO00\n`;
+	}
+
+	return bmtp;
+}
+
+
+/**
+ * Main routine
+ */
+function main() {
+
+	// status rules
+	const rules_2_status = [];
+	const rules_3_status = [];
+	for (let channel = 0; channel < 16; channel++) {
+		const channelHex = channel.toString(16).toUpperCase();
+		for (let opcodeHex of MESSAGES_2) {
+			const opcode = parseInt(opcodeHex, 16);
+			setRule(rules_2_status, `${opcodeHex}${channelHex}`, `${opcodeHex}${channelHex}pp`, KEYSTROKE_COMMAND + KEY_NIBBLES[opcode] + KEY_NIBBLES[channel]);
+		}
+		for (let opcodeHex of MESSAGES_3) {
+			const opcode = parseInt(opcodeHex, 16);
+			setRule(rules_3_status, `${opcodeHex}${channelHex}`, `${opcodeHex}${channelHex}ppqq`, KEYSTROKE_COMMAND + KEY_NIBBLES[opcode] + KEY_NIBBLES[channel]);
+		}
+	}
+
+	// data rules
+	const rules_2_data = [];
+	const rules_3_data1 = [];
+	const rules_3_data2 = [];
+	for (let value = 0; value < 256; value++) {
+		const hexValue = value.toString(16).toUpperCase().padStart(2, '0');
+		const b1 = Math.floor(value / 16);
+		const b2 = value % 16;
+		const output = KEYSTROKE_COMMAND + KEY_NIBBLES[b1] + KEY_NIBBLES[b2];
+		setRule(rules_2_data, `${hexValue}`, `oo${hexValue}`, output, true);
+		setRule(rules_3_data1, `${hexValue}`, `oo${hexValue}qq`, output);
+		setRule(rules_3_data2, `${hexValue}`, `oopp${hexValue}`, output, true);
+	}
+
+	let bmtp =
+		`[Project]\n` +
+		`Version=1\n`;
+
+	bmtp += getPreset(0, `[2] status`, rules_2_status);
+	bmtp += getPreset(1, `[2] data`, rules_2_data);
+	bmtp += getPreset(2, `[3] status`, rules_3_status);
+	bmtp += getPreset(3, `[3] data 1`, rules_3_data1);
+	bmtp += getPreset(4, `[3] data 2`, rules_3_data2);
+
+	process.stdout.write(bmtp);
+}
+
+main();

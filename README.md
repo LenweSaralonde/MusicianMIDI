@@ -1,5 +1,22 @@
 # MusicianMIDI
-Play live with Musician using a MIDI keyboard.
+Play live with Musician using any MIDI input.
+
+> ## Important notice
+> **This is an experimental version** of *MusicianMIDI* that allows more capability than the regular version but also requires more processing power to run properly.
+>
+> Ensure to reload the updated **Musician preset.bmtp** into *Bome MIDI Translator* if you used the regular version before.
+>
+> The regular version of MusicianMIDI translates MIDI note on / note off into single PC keyboard key down / key up actions. It's limited to 5 octaves due to the limited amount of available "safe" PC keyboard keys.
+>
+> Instead, this experimental version translates the whole raw MIDI message to WoW using a sequence of 6 PC keyboard keystrokes, thus requiring 6 times more processing power than the regular version.
+>
+> In exchange, it's now possible to control Musician using any MIDI source (keyboard, sequencer etc) and take advantage of the whole range of notes, program changes, control changes and the standard 16 MIDI channels.
+>
+> Unlike in the regular version where almost all the "safe" PC keyboard keys are used, the MIDI messages are transmitted using only 16 keys in the numpad and the Insert key. If you have a num pad on your keyboard, ensure that **Num lock** is always **on**.
+>
+> Pleae report feedback in the [Discord #development channel](https://discord.gg/276FjbJ).
+>
+> Have fun!
 
 ## Installation
 This add-on requires the external **Bome MIDI Translator** software to convert incoming MIDI messages from your controller into keystrokes that can be captured by the add-on.
@@ -21,7 +38,7 @@ The __Classic__ version is recommended if you run Windows because it's easy to u
 4. Select your MIDI input device in the right column
 
 ## How to play
-In WoW, click on the Musician minimap icon then **Open MIDI keyboard** or type `/mus midi`. You can play live using your MIDI keyboard as long as the MIDI keyboard window is focused in game.
+In WoW, click on the Musician minimap icon then **Open live MIDI** or type `/mus midi`. You can play live using your MIDI keyboard as long as the MIDI keyboard window is focused in game.
 
 ## Deal with latency
 As with the regular live keyboard interface, you may experience some latency between the moment you press a key and when the sound actually starts playing, which can be awkward for a live performance. Unlike music applications, the WoW client does not support low latency ASIO drivers.
