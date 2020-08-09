@@ -12,7 +12,7 @@ function MusicianMIDI:OnEnable()
 	Musician.Utils.Debug(MODULE_NAME, 'MusicianMIDI', 'OnInitialize')
 
 	-- Incompatible Musician version
-	if Musician.Live.SetSustain == nil then
+	if Musician.Live.SetSustain == nil or Musician.Utils.VersionCompare(GetAddOnMetadata("Musician", "Version"), '1.6.0.5') < 0 then
 		Musician.Utils.Error(MusicianMIDI.Msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION)
 		return
 	end
