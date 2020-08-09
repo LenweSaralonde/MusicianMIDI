@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.0.3
+--------
+* Fixed minor bug with the standard live keyboard key glowing effect
+
 v1.0.2
 --------
 * Added one MIDI translator preset per MIDI channel
