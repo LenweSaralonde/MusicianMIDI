@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.0.4
+--------
+* Fixed API conflicts with AceAddon
+
 v1.0.3
 --------
 * Fixed minor bug with the standard live keyboard key glowing effect
