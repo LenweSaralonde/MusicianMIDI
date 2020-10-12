@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.0.5
+--------
+* Updated for WoW Shadowlands 9.0.1 prepatch
+
 v1.0.4
 --------
 * Fixed API conflicts with AceAddon
