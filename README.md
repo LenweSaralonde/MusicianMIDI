@@ -4,7 +4,7 @@ Play live with Musician using a MIDI keyboard.
 ## Installation
 This add-on requires the external **Bome MIDI Translator** software to convert incoming MIDI messages from your controller into keystrokes that can be captured by the add-on.
 
-Install [Bome MIDI Translator Classic](https://www.bome.com/products/mtclassic) (Window) or [Bome MIDI Translator Pro](https://www.bome.com/products/miditranslator) (Windows & macOS) then open the provided `Musician preset.bmtp` file.
+Install [Bome MIDI Translator Classic](https://www.bome.com/products/mtclassic) (Windows) or [Bome MIDI Translator Pro](https://www.bome.com/products/miditranslator) (Windows & macOS) then open the provided `Musician preset.bmtp` file.
 
 The __Classic__ version is recommended if you run Windows because it's easy to use and works without paid license while the __Pro__ version is more complex and should be restarted every 20 minutes in trial mode. You can get a free license for any version if you [send a postcard to the developers](https://www.bome.com/postcardware).
 
