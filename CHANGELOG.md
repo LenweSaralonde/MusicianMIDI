@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.0.6
+--------
+* Updated for WoW Classic 1.13.6
+
 v1.0.4
 --------
 * Fixed API conflicts with AceAddon
