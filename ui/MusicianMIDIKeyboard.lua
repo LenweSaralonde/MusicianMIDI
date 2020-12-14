@@ -145,21 +145,21 @@ end
 --- OnPhysicalKeyDown
 -- @param event (string)
 -- @param keyValue (string)
-MusicianMIDI.Keyboard.OnPhysicalKeyDown = function(event, keyValue)
+function MusicianMIDI.Keyboard.OnPhysicalKeyDown(event, keyValue)
 	MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, true)
 end
 
 --- OnPhysicalKeyUp
 -- @param event (string)
 -- @param keyValue (string)
-MusicianMIDI.Keyboard.OnPhysicalKeyUp = function(event, keyValue)
+function MusicianMIDI.Keyboard.OnPhysicalKeyUp(event, keyValue)
 	MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, false)
 end
 
 --- Key up/down handler, from physical keyboard
 -- @param keyValue (string)
 -- @param down (boolean)
-MusicianMIDI.Keyboard.OnPhysicalKey = function(keyValue, down)
+function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 	local layer = LAYER.UPPER
 
 	-- Close window
