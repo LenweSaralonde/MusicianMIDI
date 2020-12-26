@@ -28,7 +28,7 @@ local function initLiveModeButton()
 	local button = MusicianMIDI_FrameLiveModeButton
 
 	MusicianMIDI_FrameLiveModeButton:SetScript("OnClick", function()
-		Musician.Live.Enable(not(Musician.Live.IsEnabled()))
+		Musician.Live.EnableLive(not(Musician.Live.IsLiveEnabled()))
 		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	end)
 
