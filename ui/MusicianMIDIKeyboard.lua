@@ -28,6 +28,9 @@ local instrument = {
 	[LAYER.LOWER] = 0,
 }
 
+local splitKey
+local splitMode
+
 --- Init controls for a layer
 -- @param layer (int)
 local function initLayerControls(layer)
@@ -140,6 +143,8 @@ function MusicianMIDI.Keyboard.Init()
 	initLiveModeButton()
 	initBandSyncButton()
 	initLayerControls(LAYER.UPPER)
+	initLayerControls(LAYER.LOWER)
+	MusicianMIDI.Keyboard.SetSplit(false)
 end
 
 --- OnPhysicalKeyDown
@@ -160,8 +165,6 @@ end
 -- @param keyValue (string)
 -- @param down (boolean)
 function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
-	local layer = LAYER.UPPER
-
 	-- Close window
 	if keyValue == 'ESCAPE' and down then
 		MusicianMIDIKeyboard:Hide()
@@ -172,6 +175,7 @@ function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 	-- Sustain (pedal)
 	if keyValue == 'SPACE' then
 		Musician.Live.SetSustain(down, LAYER.UPPER)
+		Musician.Live.SetSustain(down, LAYER.LOWER)
 		MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
 		return
 	end
@@ -179,6 +183,13 @@ function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 	-- Note on/note off
 	local noteKey = MusicianMIDI.KEY_BINDINGS[keyValue]
 	if noteKey ~= nil then
+
+		-- Handle keyboard splitting
+		local layer = LAYER.UPPER
+		if MusicianMIDI.Keyboard.GetSplit() and noteKey < MusicianMIDI.Keyboard.GetSplitKey() then
+			layer = LAYER.LOWER
+		end
+
 		noteKey = noteKey + transpose[layer]
 
 		if noteKey >= Musician.MIN_KEY and noteKey <= Musician.MAX_KEY then
@@ -196,4 +207,64 @@ function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 
 	-- Default: propagate
 	MusicianMIDIKeyboard:SetPropagateKeyboardInput(true)
+end
+
+--- Enable or disable split keyboard mode
+-- @param isSplit (boolean)
+function MusicianMIDI.Keyboard.SetSplit(isSplit)
+	splitMode = isSplit
+	local frame = MusicianMIDIKeyboard
+
+	frame.splitButton:SetChecked(isSplit)
+
+	if isSplit then
+		Musician.Live.AllNotesOff(LAYER.UPPER)
+		MSA_DropDownMenu_EnableDropDown(frame.lowerInstrumentDropdown)
+		MSA_DropDownMenu_EnableDropDown(frame.lowerTransposeDropdown)
+		frame.lowerLabel:SetFontObject(GameFontHighlight)
+		frame.splitKeyEditBox:SetText(Musician.Sampler.NoteName(MusicianMIDI.Keyboard.GetSplitKey()))
+		frame.splitKeyEditBox:Enable()
+	else
+		Musician.Live.AllNotesOff(LAYER.LOWER)
+		MSA_DropDownMenu_DisableDropDown(frame.lowerInstrumentDropdown)
+		MSA_DropDownMenu_DisableDropDown(frame.lowerTransposeDropdown)
+		frame.lowerLabel:SetFontObject(GameFontDisable)
+		frame.splitKeyEditBox:SetText('--')
+		frame.splitKeyEditBox:Disable()
+	end
+end
+
+--- Indicates whenever the keyboard is in split mode
+-- @return isSplit (boolean)
+function MusicianMIDI.Keyboard.GetSplit()
+	return splitMode
+end
+
+--- Set keyboard split key
+-- @param key (int)
+function MusicianMIDI.Keyboard.SetSplitKey(key)
+	splitKey = key
+	local frame = MusicianMIDIKeyboard
+	if MusicianMIDI.Keyboard.GetSplit() then
+		frame.splitKeyEditBox:SetText(Musician.Sampler.NoteName(key))
+	end
+end
+
+--- Get keyboard split key
+-- @return key (int)
+function MusicianMIDI.Keyboard.GetSplitKey()
+	return splitKey or 57 -- A3
+end
+
+--- Set keyboard split key from keypress
+-- @param keyValue (string)
+-- @return success (boolean)
+function MusicianMIDI.Keyboard.SetSplitKeyFromKeyboard(keyValue)
+	local noteKey = MusicianMIDI.KEY_BINDINGS[keyValue]
+	if noteKey ~= nil then
+		MusicianMIDI.Keyboard.SetSplitKey(noteKey)
+		return true
+	end
+
+	return false
 end
