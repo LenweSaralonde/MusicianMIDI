@@ -1,10 +1,33 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
+	<!-- Piano key template -->
+
+	<Button name="MusicianMIDIPianoKey" virtual="true">
+		<Size x="16" y="80"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="texture" file="Interface\AddOns\MusicianMIDI\ui\textures\piano-keys" setAllPoints="true" />
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self.key = 0
+				self.isFirst = false
+				self.isLast = true
+				self.down = false
+			</OnLoad>
+			<OnShow>
+				MusicianMIDI.Keyboard.SetVirtualKeyDown(self, self.down)
+			</OnShow>
+		</Scripts>
+		<HighlightTexture inherits="UIPanelButtonHighlightTexture"/>
+	</Button>
+
 	<!-- Main frame -->
 
 	<Frame name="MusicianMIDIKeyboard" inherits="MusicianDialogTemplate" enableKeyboard="true">
 
-		<Size x="520" y="120" />
+		<Size x="520" y="220" />
 
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -25,11 +48,21 @@
 
 		<Frames>
 
+			<!-- Virtual piano keyboard -->
+
+			<Frame name="$parentPianoKeys" parentKey="pianoKeys">
+				<Size x="480" y="80" />
+				<Anchors>
+					<Anchor point="BOTTOM" y="20" />
+				</Anchors>
+			</Frame>
+
 			<!-- Upper instrument selector -->
 
 			<Frame name="$parentUpperInstrument" inherits="MusicianInstrumentDropdownTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" y="15" x="-5" relativePoint="BOTTOMRIGHT" relativeTo="$parent" />
+					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentPianoKeys" />
+					<Anchor point="RIGHT" x="-5" />
 				</Anchors>
 				<Scripts>
 					<OnLoad inherit="prepend">
@@ -55,7 +88,8 @@
 
 			<Frame name="$parentLowerTranspose" parentKey="lowerTransposeDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" y="15" x="5" relativePoint="BOTTOMLEFT" relativeTo="$parent" />
+					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentPianoKeys" />
+					<Anchor point="LEFT" x="5" />
 				</Anchors>
 				<Scripts>
 					<OnLoad inherit="prepend">
@@ -111,12 +145,18 @@
 
 		<Layers>
 			<Layer level="OVERLAY">
+
+				<!-- Upper section label -->
+
 				<FontString name="$parentUpperLabel" parentKey="upperLabel" inherits="GameFontHighlight" justifyh="LEFT">
 					<Size x="250" y="32" />
 					<Anchors>
 						<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeTo="$parentUpperTranspose" x="20" />
 					</Anchors>
 				</FontString>
+
+				<!-- Lower section label -->
+
 				<FontString name="$parentLowerLabel" parentKey="lowerLabel" inherits="GameFontHighlight" justifyh="LEFT">
 					<Size x="250" y="32" />
 					<Anchors>
@@ -127,10 +167,13 @@
 		</Layers>
 
 		<Frames>
+
+			<!-- Split button -->
+
 			<Button name="$parentSplitButton" parentKey="splitButton" inherits="MusicianLEDTextButtonTemplate">
 				<Size x="72" y="22" />
 				<Anchors>
-					<Anchor point="BOTTOM" y="52" />
+					<Anchor point="BOTTOM" y="37" relativePoint="TOP" relativeTo="$parentPianoKeys" />
 				</Anchors>
 				<NormalFont style="MusicianFontIconsNormal" />
 				<HighlightFont style="MusicianFontIconsHighlight" />
@@ -162,25 +205,30 @@
 				</Scripts>
 			</Button>
 
+			<!-- Split point edit box -->
+
 			<EditBox name="$parentSplitKeyEditBox" parentKey="splitKeyEditBox" inherits="InputBoxTemplate" letters="3" historyLines="0" autofocus="false">
 				<Size x="40" y="22"/>
 				<Anchors>
-					<Anchor point="BOTTOM" y="22" x="2" />
+					<Anchor point="BOTTOM" y="7" x="2" relativePoint="TOP" relativeTo="$parentPianoKeys" />
 				</Anchors>
 				<FontString inherits="GameFontHighlightSmall" justifyH="CENTER" justifyV="MIDDLE" />
 				<Scripts>
 					<OnEscapePressed>self:ClearFocus()</OnEscapePressed>
 					<OnEditFocusGained>
+						self.isSettingSplitPoint = true
 						self:HighlightText(0)
-						GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
+						GameTooltip:SetOwner(self, "ANCHOR_TOP")
 						GameTooltip_SetTitle(GameTooltip, MusicianMIDI.Msg.SET_SPLIT_KEY_HINT)
 					</OnEditFocusGained>
 					<OnEditFocusLost>
+						C_Timer.After(0, function() self.isSettingSplitPoint = false end)
 						GameTooltip:Hide()
 						self:SetText(Musician.Sampler.NoteName(MusicianMIDI.Keyboard.GetSplitKey()))
 						self:HighlightText(0, 0)
 					</OnEditFocusLost>
 					<OnKeyDown>
+						self.isSettingSplitPoint = false
 						MusicianMIDI.Keyboard.SetSplitKeyFromKeyboard(key)
 						self:ClearFocus()
 					</OnKeyDown>
