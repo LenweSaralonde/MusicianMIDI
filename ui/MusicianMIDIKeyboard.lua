@@ -35,6 +35,8 @@ local mouseKeysDown = {}
 local keyboardKeysDown = {}
 local currentMouseKey = nil -- Current virtual keyboard button active by the mouse
 
+local refreshPianoKeyboard
+
 --- Init controls for a layer
 -- @param layer (int)
 local function initLayerControls(layer)
@@ -45,6 +47,7 @@ local function initLayerControls(layer)
 	instrumentSelector.OnChange = function(i)
 		Musician.Live.AllNotesOff(layer)
 		instrument[layer] = i
+		refreshPianoKeyboard()
 	end
 
 	instrumentSelector.SetValue(instrument[layer])
@@ -137,6 +140,88 @@ local function initBandSyncButton()
 	updateBandSyncButton()
 end
 
+--- Refresh piano keyboard layout
+--
+function refreshPianoKeyboard()
+
+	local frame = MusicianMIDIKeyboard
+	local container = MusicianMIDIKeyboard.pianoKeys
+
+	-- Get bounds and count white keys
+	local minKey, maxKey = Musician.MIN_KEY, Musician.MAX_KEY
+	local from, to
+	local whites = 0
+	for _, button in pairs(frame.pianoKeyButtons) do
+		local key = button.key
+		button:Hide()
+		if key >= minKey and key <= maxKey then
+			from = from and min(from, key) or key
+			to = to and max(to, key) or key
+			local octaveKey = key % 12
+			-- Not a black key
+			if not(octaveKey == 1 or octaveKey == 3 or octaveKey == 6 or octaveKey == 8 or octaveKey == 10) then
+				whites = whites + 1
+			end
+		end
+	end
+
+	-- Set piano keys layout
+	local x = 0
+	local w = container:GetWidth() / whites
+	local h = container:GetHeight()
+	for key = from, to do
+		local button = frame.pianoKeyButtons[key]
+		if key < from or key > to then
+			button:Hide()
+		else
+			local octaveKey = key % 12
+			button:SetWidth(w)
+			button:SetHeight(container:GetHeight())
+			button:SetPoint('TOPLEFT', x, 0)
+			button.isFirst = key == from
+			button.isLast = key == to
+			if octaveKey == 4 or octaveKey == 11 then -- No black key between E-F and B-C
+				x = x + w
+			else
+				x = x + w / 2
+			end
+
+			-- Black key
+			if octaveKey == 1 or octaveKey == 3 or octaveKey == 6 or octaveKey == 8 or octaveKey == 10 then
+				-- Only a part of the black key is clickable
+				button:SetHitRectInsets(0.2 * w, 0.2 * w, 0, .42 * h)
+				button.color:SetSize(0.6 * w, .58 * h)
+				button.highlight:SetSize(0.6 * w, .58 * h)
+				button.highlight:SetPoint('TOP', -2, -6)
+
+				-- Black keys are on top of the white ones
+				button:SetFrameLevel(button:GetParent():GetFrameLevel() + 2)
+			else -- White key
+				-- The whole key is clickable
+				button:SetHitRectInsets(0, 0, 0, 0)
+				button.color:SetSize(w, h)
+				button.highlight:SetSize(w, h)
+				button.highlight:SetPoint('TOP', 0, -10)
+
+				-- White keys are under the black ones
+				button:SetFrameLevel(button:GetParent():GetFrameLevel() + 1)
+			end
+
+			-- Set instrument color according to layer
+			local layer = LAYER.UPPER
+			if MusicianMIDI.Keyboard.GetSplit() and key < MusicianMIDI.Keyboard.GetSplitKey() then
+				layer = LAYER.LOWER
+			end
+			local instrumentName = Musician.Sampler.GetInstrumentName(instrument[layer])
+			local r, g, b = unpack(Musician.INSTRUMENTS[instrumentName].color)
+			button.color:SetColorTexture(r, g, b, 1)
+
+			MusicianMIDI.Keyboard.SetVirtualKeyDown(key, button.down)
+			button:Show()
+		end
+	end
+end
+
 --- Init piano keyboard
 --
 local function initPianoKeyboard()
@@ -145,47 +230,27 @@ local function initPianoKeyboard()
 
 	frame.pianoKeyButtons = {}
 
-	-- Get bounds and count white keys
-	local from, to
-	local whites = 0
+	-- Create key buttons
 	for keyValue, key in pairs(MusicianMIDI.KEY_BINDINGS) do
-		from = from and min(from, key) or key
-		to = to and max(to, key) or key
-		local octaveKey = key % 12
-		-- Not a black key
-		if not(octaveKey == 1 or octaveKey == 3 or octaveKey == 6 or octaveKey == 8 or octaveKey == 10) then
-			whites = whites + 1
-		end
-	end
-
-	-- Create piano keys as buttons
-	local x = 0
-	local w = container:GetWidth() / whites
-	for key = from, to do
 		local button = CreateFrame('Button', nil, container, 'MusicianMIDIPianoKey')
-		frame.pianoKeyButtons[key] = button
-		button:SetWidth(w)
-		button:SetHeight(container:GetHeight())
-		button:SetPoint('TOPLEFT', x, 0)
 		button.key = key
-		button.isFirst = key == from
-		button.isLast = key == to
-		if key % 12 == 4 or key % 12 == 11 then -- No black key between E-F and B-C
-			x = x + w
-		else
-			x = x + w / 2
-		end
-		MusicianMIDI.Keyboard.SetVirtualKeyDown(key, button.down)
+		frame.pianoKeyButtons[key] = button
 		button:HookScript('OnMouseDown', MusicianMIDI.Keyboard.OnVirtualKeyMouseDown)
 		button:HookScript('OnMouseUp', MusicianMIDI.Keyboard.OnVirtualKeyMouseUp)
 		button:HookScript('OnEnter', MusicianMIDI.Keyboard.OnVirtualKeyEnter)
 		button:HookScript('OnLeave', MusicianMIDI.Keyboard.OnVirtualKeyLeave)
 	end
+
+	refreshPianoKeyboard()
 end
 
 --- Initialize MIDI keyboard
 --
 function MusicianMIDI.Keyboard.Init()
+	-- Init virtual piano keyboard
+	initPianoKeyboard()
+
+	-- Global key bindings
 	MusicianMIDIKeyboard:SetScript("OnKeyDown", MusicianMIDI.Keyboard.OnPhysicalKeyDown)
 	MusicianMIDIKeyboard:SetScript("OnKeyUp", MusicianMIDI.Keyboard.OnPhysicalKeyUp)
 
@@ -195,9 +260,6 @@ function MusicianMIDI.Keyboard.Init()
 	initLayerControls(LAYER.UPPER)
 	initLayerControls(LAYER.LOWER)
 	MusicianMIDI.Keyboard.SetSplit(false)
-
-	-- Init piano keyboard
-	initPianoKeyboard()
 end
 
 --- OnPhysicalKeyDown
@@ -283,14 +345,16 @@ end
 -- @param button (Button)
 -- @param mouseButton (string)
 function MusicianMIDI.Keyboard.OnVirtualKeyMouseDown(button, mouseButton)
-	MusicianMIDI.Keyboard.OnVirtualKey(button.key, true)
+	if mouseButton == 'LeftButton' then
+		MusicianMIDI.Keyboard.OnVirtualKey(button.key, true)
+	end
 end
 
 --- Virtual keyboard button mouse up handler
 -- @param button (Button)
 -- @param mouseButton (string)
 function MusicianMIDI.Keyboard.OnVirtualKeyMouseUp(button, mouseButton)
-	if currentMouseKey then
+	if currentMouseKey and mouseButton == 'LeftButton' then
 		MusicianMIDI.Keyboard.OnVirtualKey(currentMouseKey, false)
 	end
 end
@@ -299,7 +363,7 @@ end
 -- @param button (Button)
 function MusicianMIDI.Keyboard.OnVirtualKeyEnter(button)
 	currentMouseKey = button.key
-	if IsMouseButtonDown() then
+	if IsMouseButtonDown('LeftButton') then
 		MusicianMIDI.Keyboard.OnVirtualKey(button.key, true)
 	end
 end
@@ -307,7 +371,7 @@ end
 --- Virtual keyboard button mouse leave handler
 -- @param button (Button)
 function MusicianMIDI.Keyboard.OnVirtualKeyLeave(button)
-	if currentMouseKey and IsMouseButtonDown() then
+	if currentMouseKey and IsMouseButtonDown('LeftButton') then
 		MusicianMIDI.Keyboard.OnVirtualKey(button.key, false)
 	end
 	currentMouseKey = nil
@@ -346,29 +410,20 @@ function MusicianMIDI.Keyboard.SetVirtualKeyDown(noteKey, down)
 
 	button.down = down
 
-	local key = button.key % 12
+	local octaveKey = button.key % 12
 	local texturePosition = 0
 
 	-- Black key
-	if key == 1 or key == 3 or key == 6 or key == 8 or key == 10 then
+	if octaveKey == 1 or octaveKey == 3 or octaveKey == 6 or octaveKey == 8 or octaveKey == 10 then
 		if down then
 			texturePosition = 5
 		else
 			texturePosition = 6
 		end
-
-		-- Only a part of the black key is clickable
-		local w = button:GetWidth()
-		local h = button:GetHeight()
-		button:SetHitRectInsets(0.2 * w, 0.2 * w, 0, .42 * h)
-
-		-- Black keys on top of the white ones
-		button:SetFrameLevel(button:GetParent():GetFrameLevel() + 2)
-
 		button.texture:SetTexCoord(.125 * texturePosition + .0078, .125 * texturePosition + .125, 0, .625)
 	else -- White key
-		local hasBlackLeft = not(button.isFirst) and (key == 2 or key == 4 or key == 7 or key == 11)
-		local hasBlackRight = not(button.isLast) and (key == 0 or key == 2 or key == 5 or key == 7 or key == 9)
+		local hasBlackLeft = not(button.isFirst) and (octaveKey == 2 or octaveKey == 4 or octaveKey == 7 or octaveKey == 11)
+		local hasBlackRight = not(button.isLast) and (octaveKey == 0 or octaveKey == 2 or octaveKey == 5 or octaveKey == 7 or octaveKey == 9)
 
 		if down then
 			if not(hasBlackLeft) and hasBlackRight then
@@ -383,13 +438,6 @@ function MusicianMIDI.Keyboard.SetVirtualKeyDown(noteKey, down)
 		else
 			texturePosition = 0
 		end
-
-		-- The whole key is clickable
-		button:SetHitRectInsets(0, 0, 0, 0)
-
-		-- White keys under the black ones
-		button:SetFrameLevel(button:GetParent():GetFrameLevel() + 1)
-
 		button.texture:SetTexCoord(.125 * texturePosition + 0, .125 * texturePosition + .125, 0, .625)
 	end
 end
@@ -417,6 +465,7 @@ function MusicianMIDI.Keyboard.SetSplit(isSplit)
 		frame.splitKeyEditBox:SetText('--')
 		frame.splitKeyEditBox:Disable()
 	end
+	refreshPianoKeyboard()
 end
 
 --- Indicates whenever the keyboard is in split mode
@@ -429,6 +478,7 @@ end
 -- @param key (int)
 function MusicianMIDI.Keyboard.SetSplitKey(key)
 	splitKey = key
+	refreshPianoKeyboard()
 	local frame = MusicianMIDIKeyboard
 	if MusicianMIDI.Keyboard.GetSplit() then
 		frame.splitKeyEditBox:SetText(Musician.Sampler.NoteName(key))

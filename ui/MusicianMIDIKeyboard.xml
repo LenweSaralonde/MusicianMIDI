@@ -7,6 +7,12 @@
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture parentKey="texture" file="Interface\AddOns\MusicianMIDI\ui\textures\piano-keys" setAllPoints="true" />
+				<Texture parentKey="color" alphamode="MOD">
+					<Anchors>
+						<Anchor point="TOP" />
+					</Anchors>
+					<Color a="1" r="0" g="1" b="0" />
+				</Texture>
 			</Layer>
 		</Layers>
 		<Scripts>
@@ -20,7 +26,11 @@
 				MusicianMIDI.Keyboard.SetVirtualKeyDown(self, self.down)
 			</OnShow>
 		</Scripts>
-		<HighlightTexture inherits="UIPanelButtonHighlightTexture"/>
+		<HighlightTexture parentKey="highlight" inherits="UIPanelButtonHighlightTexture">
+			<Anchors>
+				<Anchor point="TOP" />
+			</Anchors>
+		</HighlightTexture>
 	</Button>
 
 	<!-- Main frame -->
