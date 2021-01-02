@@ -13,6 +13,21 @@
 					</Anchors>
 					<Color a="1" r="0" g="1" b="0" />
 				</Texture>
+				<Texture parentKey="glowColor" alpha="0">
+					<Anchors>
+						<Anchor point="CENTER" />
+					</Anchors>
+					<Color a="1" r=".854" g=".968" b=".992" />
+				</Texture>
+				<MaskTexture parentKey="glowMask" file="Interface\AddOns\Musician\ui\textures\button-glow" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.glowColor" />
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.glowColor" />
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="glowColor"/>
+					</MaskedTextures>
+				</MaskTexture>
 			</Layer>
 		</Layers>
 		<Scripts>

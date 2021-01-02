@@ -190,7 +190,11 @@ function refreshPianoKeyboard()
 			if octaveKey == 1 or octaveKey == 3 or octaveKey == 6 or octaveKey == 8 or octaveKey == 10 then
 				-- Only a part of the black key is clickable
 				button:SetHitRectInsets(0.2 * w, 0.2 * w, 0, .42 * h)
-				button.color:SetSize(0.6 * w, .58 * h)
+
+				-- Resize textures to clickable area
+				button.color:SetSize(10, 46)
+				button.glowColor:SetSize(12, 80)
+				button.glowColor:SetPoint('CENTER', -2, 16)
 				button.highlight:SetSize(0.6 * w, .58 * h)
 				button.highlight:SetPoint('TOP', -2, -6)
 
@@ -199,7 +203,11 @@ function refreshPianoKeyboard()
 			else -- White key
 				-- The whole key is clickable
 				button:SetHitRectInsets(0, 0, 0, 0)
-				button.color:SetSize(w, h)
+
+				-- Resize textures to clickable area
+				button.color:SetSize(16, 80)
+				button.glowColor:SetSize(22, 160)
+				button.glowColor:SetPoint('CENTER', 0, -2.5)
 				button.highlight:SetSize(w, h)
 				button.highlight:SetPoint('TOP', 0, -10)
 
@@ -214,6 +222,9 @@ function refreshPianoKeyboard()
 			end
 			local instrumentName = Musician.Sampler.GetInstrumentName(instrument[layer])
 			local r, g, b = unpack(Musician.INSTRUMENTS[instrumentName].color)
+			if r > .5 then r = r * .8 end
+			if g > .5 then g = g * .8 end
+			if b > .5 then b = b * .8 end
 			button.color:SetColorTexture(r, g, b, 1)
 
 			MusicianMIDI.Keyboard.SetVirtualKeyDown(key, button.down)
@@ -234,14 +245,19 @@ local function initPianoKeyboard()
 	for keyValue, key in pairs(MusicianMIDI.KEY_BINDINGS) do
 		local button = CreateFrame('Button', nil, container, 'MusicianMIDIPianoKey')
 		button.key = key
+		button.volumeMeter = Musician.VolumeMeter.create()
 		frame.pianoKeyButtons[key] = button
 		button:HookScript('OnMouseDown', MusicianMIDI.Keyboard.OnVirtualKeyMouseDown)
 		button:HookScript('OnMouseUp', MusicianMIDI.Keyboard.OnVirtualKeyMouseUp)
 		button:HookScript('OnEnter', MusicianMIDI.Keyboard.OnVirtualKeyEnter)
 		button:HookScript('OnLeave', MusicianMIDI.Keyboard.OnVirtualKeyLeave)
+		button:HookScript('OnUpdate', MusicianMIDI.Keyboard.OnVirtualKeyUpdate)
 	end
 
 	refreshPianoKeyboard()
+
+	MusicianMIDI.Keyboard:RegisterMessage(Musician.Events.LiveNoteOn, MusicianMIDI.Keyboard.OnLiveNoteOn)
+	MusicianMIDI.Keyboard:RegisterMessage(Musician.Events.LiveNoteOff, MusicianMIDI.Keyboard.OnLiveNoteOff)
 end
 
 --- Initialize MIDI keyboard
@@ -377,6 +393,14 @@ function MusicianMIDI.Keyboard.OnVirtualKeyLeave(button)
 	currentMouseKey = nil
 end
 
+--- Virtual keyboard button on update
+-- @param button (Button)
+-- @param elapsed (number)
+function MusicianMIDI.Keyboard.OnVirtualKeyUpdate(button, elapsed)
+	button.volumeMeter:AddElapsed(elapsed)
+	button.glowColor:SetAlpha(button.volumeMeter:GetLevel() * 1)
+end
+
 --- Set note event
 -- @param noteKey (int) MIDI key number
 -- @param down (boolean)
@@ -393,9 +417,9 @@ function MusicianMIDI.Keyboard.SetNote(noteKey, down)
 
 	-- Send note event
 	if down then
-		Musician.Live.NoteOn(noteKey, layer, instrument[layer], false)
+		Musician.Live.NoteOn(noteKey, layer, instrument[layer], false, MusicianMIDI.Keyboard)
 	else
-		Musician.Live.NoteOff(noteKey, layer, instrument[layer], false)
+		Musician.Live.NoteOff(noteKey, layer, instrument[layer])
 	end
 end
 
@@ -502,4 +526,51 @@ function MusicianMIDI.Keyboard.SetSplitKeyFromKeyboard(keyValue)
 	end
 
 	return false
+end
+
+--- OnLiveNoteOn
+-- @param event (string)
+-- @param key (number)
+-- @param layer (number)
+-- @param instrumentData (table)
+-- @param isChordNote (boolean)
+-- @param source (table)
+function MusicianMIDI.Keyboard.OnLiveNoteOn(event, key, layer, instrumentData, isChordNote, source)
+	if source ~= MusicianMIDI.Keyboard or instrumentData == nil then return end
+
+	if transpose[layer] then
+		key = key - transpose[layer]
+	end
+
+	local button = MusicianMIDIKeyboard.pianoKeyButtons[key]
+
+	if not(button) then
+		return
+	end
+
+	button.volumeMeter:NoteOn(instrumentData)
+	button.volumeMeter.gain = isChordNote and .5 or 1 -- Make auto-chord notes dimmer
+	button.volumeMeter.entropy = button.volumeMeter.entropy / 2
+end
+
+--- OnLiveNoteOff
+-- @param event (string)
+-- @param key (number)
+-- @param layer (number)
+-- @param isChordNote (boolean)
+-- @param source (table)
+function MusicianMIDI.Keyboard.OnLiveNoteOff(event, key, layer, isChordNote, source)
+	if source ~= MusicianMIDI.Keyboard then return end
+
+	if transpose[layer] then
+		key = key - transpose[layer]
+	end
+
+	local button = MusicianMIDIKeyboard.pianoKeyButtons[key]
+
+	if not(button) then
+		return
+	end
+
+	button.volumeMeter:NoteOff()
 end
