@@ -31,6 +31,10 @@ local instrument = {
 local splitKey
 local splitMode
 
+local mouseKeysDown = {}
+local keyboardKeysDown = {}
+local currentMouseKey = nil -- Current virtual keyboard button active by the mouse
+
 --- Init controls for a layer
 -- @param layer (int)
 local function initLayerControls(layer)
@@ -133,6 +137,52 @@ local function initBandSyncButton()
 	updateBandSyncButton()
 end
 
+--- Init piano keyboard
+--
+local function initPianoKeyboard()
+	local frame = MusicianMIDIKeyboard
+	local container = MusicianMIDIKeyboard.pianoKeys
+
+	frame.pianoKeyButtons = {}
+
+	-- Get bounds and count white keys
+	local from, to
+	local whites = 0
+	for keyValue, key in pairs(MusicianMIDI.KEY_BINDINGS) do
+		from = from and min(from, key) or key
+		to = to and max(to, key) or key
+		local octaveKey = key % 12
+		-- Not a black key
+		if not(octaveKey == 1 or octaveKey == 3 or octaveKey == 6 or octaveKey == 8 or octaveKey == 10) then
+			whites = whites + 1
+		end
+	end
+
+	-- Create piano keys as buttons
+	local x = 0
+	local w = container:GetWidth() / whites
+	for key = from, to do
+		local button = CreateFrame('Button', nil, container, 'MusicianMIDIPianoKey')
+		frame.pianoKeyButtons[key] = button
+		button:SetWidth(w)
+		button:SetHeight(container:GetHeight())
+		button:SetPoint('TOPLEFT', x, 0)
+		button.key = key
+		button.isFirst = key == from
+		button.isLast = key == to
+		if key % 12 == 4 or key % 12 == 11 then -- No black key between E-F and B-C
+			x = x + w
+		else
+			x = x + w / 2
+		end
+		MusicianMIDI.Keyboard.SetVirtualKeyDown(key, button.down)
+		button:HookScript('OnMouseDown', MusicianMIDI.Keyboard.OnVirtualKeyMouseDown)
+		button:HookScript('OnMouseUp', MusicianMIDI.Keyboard.OnVirtualKeyMouseUp)
+		button:HookScript('OnEnter', MusicianMIDI.Keyboard.OnVirtualKeyEnter)
+		button:HookScript('OnLeave', MusicianMIDI.Keyboard.OnVirtualKeyLeave)
+	end
+end
+
 --- Initialize MIDI keyboard
 --
 function MusicianMIDI.Keyboard.Init()
@@ -145,6 +195,9 @@ function MusicianMIDI.Keyboard.Init()
 	initLayerControls(LAYER.UPPER)
 	initLayerControls(LAYER.LOWER)
 	MusicianMIDI.Keyboard.SetSplit(false)
+
+	-- Init piano keyboard
+	initPianoKeyboard()
 end
 
 --- OnPhysicalKeyDown
@@ -183,30 +236,162 @@ function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 	-- Note on/note off
 	local noteKey = MusicianMIDI.KEY_BINDINGS[keyValue]
 	if noteKey ~= nil then
-
-		-- Handle keyboard splitting
-		local layer = LAYER.UPPER
-		if MusicianMIDI.Keyboard.GetSplit() and noteKey < MusicianMIDI.Keyboard.GetSplitKey() then
-			layer = LAYER.LOWER
-		end
-
-		noteKey = noteKey + transpose[layer]
-
-		if noteKey >= Musician.MIN_KEY and noteKey <= Musician.MAX_KEY then
-			local noteId = layer .. noteKey
-			if down then
-				Musician.Live.NoteOn(noteKey, layer, instrument[layer], false)
-			else
-				Musician.Live.NoteOff(noteKey, layer, instrument[layer], false)
-			end
-		end
-
+		MusicianMIDI.Keyboard.OnKeyboardKey(noteKey, down)
 		MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
 		return
 	end
 
 	-- Default: propagate
 	MusicianMIDIKeyboard:SetPropagateKeyboardInput(true)
+end
+
+--- Key up/down handler, from MIDI piano keyboard
+-- @param noteKey (int) MIDI key number
+-- @param down (boolean)
+function MusicianMIDI.Keyboard.OnKeyboardKey(noteKey, down)
+	local wasDown = keyboardKeysDown[noteKey] and not(mouseKeysDown[noteKey])
+	local wasUp = not(keyboardKeysDown[noteKey]) and not(mouseKeysDown[noteKey])
+	keyboardKeysDown[noteKey] = down and true or nil
+	if not(down) and wasDown or down and wasUp then
+		MusicianMIDI.Keyboard.SetNote(noteKey, down)
+		MusicianMIDI.Keyboard.SetVirtualKeyDown(noteKey, down)
+	end
+end
+
+--- Key up/down handler, from virtual piano keyboard
+-- @param noteKey (int) MIDI key number
+-- @param down (boolean)
+function MusicianMIDI.Keyboard.OnVirtualKey(noteKey, down)
+	local wasDown = not(keyboardKeysDown[noteKey]) and mouseKeysDown[noteKey]
+	local wasUp = not(keyboardKeysDown[noteKey]) and not(mouseKeysDown[noteKey])
+	mouseKeysDown[noteKey] = down and true or nil
+	if not(down) and wasDown or down and wasUp then
+		local splitKeyEditBox = MusicianMIDIKeyboard.splitKeyEditBox
+		-- Setting split point using the virtual keyboard
+		if down and splitKeyEditBox.isSettingSplitPoint then
+			splitKeyEditBox.isSettingSplitPoint = false
+			mouseKeysDown[noteKey] = nil
+			MusicianMIDI.Keyboard.SetSplitKey(noteKey)
+		else
+			MusicianMIDI.Keyboard.SetNote(noteKey, down)
+			MusicianMIDI.Keyboard.SetVirtualKeyDown(noteKey, down)
+		end
+	end
+end
+
+--- Virtual keyboard button mouse down handler
+-- @param button (Button)
+-- @param mouseButton (string)
+function MusicianMIDI.Keyboard.OnVirtualKeyMouseDown(button, mouseButton)
+	MusicianMIDI.Keyboard.OnVirtualKey(button.key, true)
+end
+
+--- Virtual keyboard button mouse up handler
+-- @param button (Button)
+-- @param mouseButton (string)
+function MusicianMIDI.Keyboard.OnVirtualKeyMouseUp(button, mouseButton)
+	if currentMouseKey then
+		MusicianMIDI.Keyboard.OnVirtualKey(currentMouseKey, false)
+	end
+end
+
+--- Virtual keyboard button mouse enter handler
+-- @param button (Button)
+function MusicianMIDI.Keyboard.OnVirtualKeyEnter(button)
+	currentMouseKey = button.key
+	if IsMouseButtonDown() then
+		MusicianMIDI.Keyboard.OnVirtualKey(button.key, true)
+	end
+end
+
+--- Virtual keyboard button mouse leave handler
+-- @param button (Button)
+function MusicianMIDI.Keyboard.OnVirtualKeyLeave(button)
+	if currentMouseKey and IsMouseButtonDown() then
+		MusicianMIDI.Keyboard.OnVirtualKey(button.key, false)
+	end
+	currentMouseKey = nil
+end
+
+--- Set note event
+-- @param noteKey (int) MIDI key number
+-- @param down (boolean)
+function MusicianMIDI.Keyboard.SetNote(noteKey, down)
+
+	-- Handle keyboard splitting
+	local layer = LAYER.UPPER
+	if MusicianMIDI.Keyboard.GetSplit() and noteKey < MusicianMIDI.Keyboard.GetSplitKey() then
+		layer = LAYER.LOWER
+	end
+
+	-- Handle transposition
+	noteKey = noteKey + transpose[layer]
+
+	-- Send note event
+	if down then
+		Musician.Live.NoteOn(noteKey, layer, instrument[layer], false)
+	else
+		Musician.Live.NoteOff(noteKey, layer, instrument[layer], false)
+	end
+end
+
+--- Set piano key down on the virtual keyboard
+-- @param noteKey (int) MIDI key number
+-- @param down (boolean)
+function MusicianMIDI.Keyboard.SetVirtualKeyDown(noteKey, down)
+
+	local button = MusicianMIDIKeyboard.pianoKeyButtons[noteKey]
+
+	if not(button) then return end
+
+	button.down = down
+
+	local key = button.key % 12
+	local texturePosition = 0
+
+	-- Black key
+	if key == 1 or key == 3 or key == 6 or key == 8 or key == 10 then
+		if down then
+			texturePosition = 5
+		else
+			texturePosition = 6
+		end
+
+		-- Only a part of the black key is clickable
+		local w = button:GetWidth()
+		local h = button:GetHeight()
+		button:SetHitRectInsets(0.2 * w, 0.2 * w, 0, .42 * h)
+
+		-- Black keys on top of the white ones
+		button:SetFrameLevel(button:GetParent():GetFrameLevel() + 2)
+
+		button.texture:SetTexCoord(.125 * texturePosition + .0078, .125 * texturePosition + .125, 0, .625)
+	else -- White key
+		local hasBlackLeft = not(button.isFirst) and (key == 2 or key == 4 or key == 7 or key == 11)
+		local hasBlackRight = not(button.isLast) and (key == 0 or key == 2 or key == 5 or key == 7 or key == 9)
+
+		if down then
+			if not(hasBlackLeft) and hasBlackRight then
+				texturePosition = 2
+			elseif hasBlackLeft and hasBlackRight then
+				texturePosition = 3
+			elseif hasBlackLeft and not(hasBlackRight) then
+				texturePosition = 4
+			else
+				texturePosition = 1
+			end
+		else
+			texturePosition = 0
+		end
+
+		-- The whole key is clickable
+		button:SetHitRectInsets(0, 0, 0, 0)
+
+		-- White keys under the black ones
+		button:SetFrameLevel(button:GetParent():GetFrameLevel() + 1)
+
+		button.texture:SetTexCoord(.125 * texturePosition + 0, .125 * texturePosition + .125, 0, .625)
+	end
 end
 
 --- Enable or disable split keyboard mode
