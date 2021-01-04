@@ -313,10 +313,12 @@ end
 -- @param keyValue (string)
 -- @param down (boolean)
 function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
+
+	MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
+
 	-- Close window
 	if keyValue == 'ESCAPE' and down then
 		MusicianMIDIKeyboard:Hide()
-		MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
 		return
  	end
 
@@ -324,7 +326,6 @@ function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 	if keyValue == 'SPACE' then
 		Musician.Live.SetSustain(down, LAYER.UPPER)
 		Musician.Live.SetSustain(down, LAYER.LOWER)
-		MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
 		return
 	end
 
@@ -332,7 +333,6 @@ function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 	local noteKey = MusicianMIDI.KEY_BINDINGS[keyValue]
 	if noteKey ~= nil then
 		MusicianMIDI.Keyboard.OnKeyboardKey(noteKey, down)
-		MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
 		return
 	end
 
@@ -376,18 +376,16 @@ end
 
 --- Virtual keyboard button mouse down handler
 -- @param button (Button)
--- @param mouseButton (string)
-function MusicianMIDI.Keyboard.OnVirtualKeyMouseDown(button, mouseButton)
-	if mouseButton == 'LeftButton' then
-		MusicianMIDI.Keyboard.OnVirtualKey(button.key, true)
+function MusicianMIDI.Keyboard.OnVirtualKeyMouseDown(button)
+	if currentMouseKey and IsMouseButtonDown() then
+		MusicianMIDI.Keyboard.OnVirtualKey(currentMouseKey, true)
 	end
 end
 
 --- Virtual keyboard button mouse up handler
 -- @param button (Button)
--- @param mouseButton (string)
-function MusicianMIDI.Keyboard.OnVirtualKeyMouseUp(button, mouseButton)
-	if currentMouseKey and mouseButton == 'LeftButton' then
+function MusicianMIDI.Keyboard.OnVirtualKeyMouseUp(button)
+	if currentMouseKey and not(IsMouseButtonDown()) then
 		MusicianMIDI.Keyboard.OnVirtualKey(currentMouseKey, false)
 	end
 end
@@ -396,7 +394,7 @@ end
 -- @param button (Button)
 function MusicianMIDI.Keyboard.OnVirtualKeyEnter(button)
 	currentMouseKey = button.key
-	if IsMouseButtonDown('LeftButton') then
+	if IsMouseButtonDown() then
 		MusicianMIDI.Keyboard.OnVirtualKey(button.key, true)
 	end
 end
@@ -404,7 +402,7 @@ end
 --- Virtual keyboard button mouse leave handler
 -- @param button (Button)
 function MusicianMIDI.Keyboard.OnVirtualKeyLeave(button)
-	if currentMouseKey and IsMouseButtonDown('LeftButton') then
+	if currentMouseKey and IsMouseButtonDown() then
 		MusicianMIDI.Keyboard.OnVirtualKey(button.key, false)
 	end
 	currentMouseKey = nil
