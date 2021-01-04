@@ -226,7 +226,7 @@
 					</OnLoad>
 					<OnClick inherit="append">
 						PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
-						local isSplit = not(MusicianMIDI.Keyboard.GetSplit())
+						local isSplit = not(MusicianMIDI.Keyboard.IsSplit())
 						MusicianMIDI.Keyboard.SetSplit(isSplit)
 						self:SetChecked(isSplit)
 					</OnClick>

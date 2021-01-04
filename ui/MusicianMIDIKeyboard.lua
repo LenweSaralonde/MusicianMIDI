@@ -250,7 +250,7 @@ function refreshPianoKeyboardColors(onlyForLayer)
 	for _, button in pairs(frame.pianoKeyButtons) do
 		-- Set instrument color according to layer
 		local layer = LAYER.UPPER
-		if MusicianMIDI.Keyboard.GetSplit() and button.key < MusicianMIDI.Keyboard.GetSplitKey() then
+		if MusicianMIDI.Keyboard.IsSplit() and button.key < MusicianMIDI.Keyboard.GetSplitKey() then
 			layer = LAYER.LOWER
 		end
 
@@ -343,8 +343,7 @@ function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 
 	-- Sustain (pedal)
 	if keyValue == 'SPACE' then
-		Musician.Live.SetSustain(down, LAYER.UPPER)
-		Musician.Live.SetSustain(down, LAYER.LOWER)
+		MusicianMIDI.Keyboard.SetSustain(down)
 		return
 	end
 
@@ -443,7 +442,7 @@ function MusicianMIDI.Keyboard.SetNote(noteKey, down)
 
 	-- Handle keyboard splitting
 	local layer = LAYER.UPPER
-	if MusicianMIDI.Keyboard.GetSplit() and noteKey < MusicianMIDI.Keyboard.GetSplitKey() then
+	if MusicianMIDI.Keyboard.IsSplit() and noteKey < MusicianMIDI.Keyboard.GetSplitKey() then
 		layer = LAYER.LOWER
 	end
 
@@ -509,6 +508,8 @@ function MusicianMIDI.Keyboard.SetSplit(isSplit)
 
 	frame.splitButton:SetChecked(isSplit)
 	Musician.Live.AllNotesOff()
+	Musician.Live.SetSustain(false, LAYER.UPPER)
+	Musician.Live.SetSustain(false, LAYER.LOWER)
 	if isSplit then
 		MSA_DropDownMenu_EnableDropDown(frame.lowerInstrumentDropdown)
 		MSA_DropDownMenu_EnableDropDown(frame.lowerTransposeDropdown)
@@ -527,7 +528,7 @@ end
 
 --- Indicates whenever the keyboard is in split mode
 -- @return isSplit (boolean)
-function MusicianMIDI.Keyboard.GetSplit()
+function MusicianMIDI.Keyboard.IsSplit()
 	return splitMode
 end
 
@@ -535,11 +536,12 @@ end
 -- @param key (int)
 function MusicianMIDI.Keyboard.SetSplitKey(key)
 	splitKey = key
-	Musician.Live.AllNotesOff()
-	refreshPianoKeyboardColors()
-	local frame = MusicianMIDIKeyboard
-	if MusicianMIDI.Keyboard.GetSplit() then
-		frame.splitKeyEditBox:SetText(Musician.Sampler.NoteName(key))
+	if MusicianMIDI.Keyboard.IsSplit() then
+		Musician.Live.AllNotesOff()
+		refreshPianoKeyboardColors()
+		Musician.Live.SetSustain(false, LAYER.UPPER)
+		Musician.Live.SetSustain(false, LAYER.LOWER)
+		MusicianMIDIKeyboard.splitKeyEditBox:SetText(Musician.Sampler.NoteName(key))
 	end
 end
 
@@ -607,4 +609,30 @@ function MusicianMIDI.Keyboard.OnLiveNoteOff(event, key, layer, isChordNote, sou
 	end
 
 	button.volumeMeter:NoteOff()
+end
+
+--- Set sustain
+-- @param sustain
+function MusicianMIDI.Keyboard.SetSustain(value)
+	-- Always sustain upper only if not in split mode
+	if not(MusicianMIDI.Keyboard.IsSplit()) then
+		Musician.Live.SetSustain(value, LAYER.UPPER)
+		return
+	end
+
+	-- Determine if lower and upper instruments are "plucked" like piano, guitar etc.
+	local upperInstrumentName = Musician.Sampler.GetInstrumentName(instrument[LAYER.UPPER])
+	local lowerInstrumentName = Musician.Sampler.GetInstrumentName(instrument[LAYER.LOWER])
+	local upperIsPlucked = instrument[LAYER.UPPER] >= 128 or Musician.INSTRUMENTS[upperInstrumentName] and Musician.INSTRUMENTS[upperInstrumentName].isPlucked or false
+	local lowerIsPlucked = instrument[LAYER.LOWER] >= 128 or Musician.INSTRUMENTS[lowerInstrumentName] and Musician.INSTRUMENTS[lowerInstrumentName].isPlucked or false
+
+	-- Do not sustain the non-plucked instrument if the other one is plucked
+	if upperIsPlucked ~= lowerIsPlucked then
+		Musician.Live.SetSustain(value and upperIsPlucked, LAYER.UPPER)
+		Musician.Live.SetSustain(value and lowerIsPlucked, LAYER.LOWER)
+	else
+		-- Both instruments are either plucked or not: sustain both
+		Musician.Live.SetSustain(value, LAYER.UPPER)
+		Musician.Live.SetSustain(value, LAYER.LOWER)
+	end
 end
