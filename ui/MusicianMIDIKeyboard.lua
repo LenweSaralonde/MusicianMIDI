@@ -35,7 +35,8 @@ local mouseKeysDown = {}
 local keyboardKeysDown = {}
 local currentMouseKey = nil -- Current virtual keyboard button active by the mouse
 
-local refreshPianoKeyboard
+local refreshPianoKeyboardColors
+local refreshPianoKeyboardLayout
 
 --- Init controls for a layer
 -- @param layer (int)
@@ -47,7 +48,7 @@ local function initLayerControls(layer)
 	instrumentSelector.OnChange = function(i)
 		Musician.Live.AllNotesOff(layer)
 		instrument[layer] = i
-		refreshPianoKeyboard()
+		refreshPianoKeyboardColors(layer)
 	end
 
 	instrumentSelector.SetValue(instrument[layer])
@@ -157,9 +158,9 @@ local function initBandSyncButton()
 	updateBandSyncButton()
 end
 
---- Refresh piano keyboard layout
+--- Refresh whole piano keyboard layout
 --
-function refreshPianoKeyboard()
+function refreshPianoKeyboardLayout()
 
 	local frame = MusicianMIDIKeyboard
 	local container = MusicianMIDIKeyboard.pianoKeys
@@ -232,11 +233,28 @@ function refreshPianoKeyboard()
 				button:SetFrameLevel(button:GetParent():GetFrameLevel() + 1)
 			end
 
-			-- Set instrument color according to layer
-			local layer = LAYER.UPPER
-			if MusicianMIDI.Keyboard.GetSplit() and key < MusicianMIDI.Keyboard.GetSplitKey() then
-				layer = LAYER.LOWER
-			end
+			-- Set status texture status and show
+			MusicianMIDI.Keyboard.SetVirtualKeyDown(key, button.down)
+			button:Show()
+		end
+	end
+
+	-- Set colors
+	refreshPianoKeyboardColors()
+end
+
+--- Refresh piano keyboard colors
+-- @param[opt] onlyForLayer (number)
+function refreshPianoKeyboardColors(onlyForLayer)
+	local frame = MusicianMIDIKeyboard
+	for _, button in pairs(frame.pianoKeyButtons) do
+		-- Set instrument color according to layer
+		local layer = LAYER.UPPER
+		if MusicianMIDI.Keyboard.GetSplit() and button.key < MusicianMIDI.Keyboard.GetSplitKey() then
+			layer = LAYER.LOWER
+		end
+
+		if onlyForLayer == nil or onlyForLayer == layer then
 			local instrumentName = Musician.Sampler.GetInstrumentName(instrument[layer])
 			local r, g, b = unpack(Musician.INSTRUMENTS[instrumentName].color)
 			if r > .5 then r = r * .8 end
@@ -244,8 +262,9 @@ function refreshPianoKeyboard()
 			if b > .5 then b = b * .8 end
 			button.color:SetColorTexture(r, g, b, 1)
 
-			MusicianMIDI.Keyboard.SetVirtualKeyDown(key, button.down)
-			button:Show()
+			-- Reset volume meter glow
+			button.volumeMeter:Reset()
+			button.glowColor:SetAlpha(0)
 		end
 	end
 end
@@ -271,7 +290,7 @@ local function initPianoKeyboard()
 		button:HookScript('OnUpdate', MusicianMIDI.Keyboard.OnVirtualKeyUpdate)
 	end
 
-	refreshPianoKeyboard()
+	refreshPianoKeyboardLayout()
 
 	MusicianMIDI.Keyboard:RegisterMessage(Musician.Events.LiveNoteOn, MusicianMIDI.Keyboard.OnLiveNoteOn)
 	MusicianMIDI.Keyboard:RegisterMessage(Musician.Events.LiveNoteOff, MusicianMIDI.Keyboard.OnLiveNoteOff)
@@ -365,7 +384,8 @@ function MusicianMIDI.Keyboard.OnVirtualKey(noteKey, down)
 		-- Setting split point using the virtual keyboard
 		if down and splitKeyEditBox.isSettingSplitPoint then
 			splitKeyEditBox.isSettingSplitPoint = false
-			mouseKeysDown[noteKey] = nil
+			-- mouseKeysDown[noteKey] = nil
+			MusicianMIDI.Keyboard.SetVirtualKeyDown(noteKey, false)
 			MusicianMIDI.Keyboard.SetSplitKey(noteKey)
 		else
 			MusicianMIDI.Keyboard.SetNote(noteKey, down)
@@ -375,16 +395,16 @@ function MusicianMIDI.Keyboard.OnVirtualKey(noteKey, down)
 end
 
 --- Virtual keyboard button mouse down handler
--- @param button (Button)
-function MusicianMIDI.Keyboard.OnVirtualKeyMouseDown(button)
+--
+function MusicianMIDI.Keyboard.OnVirtualKeyMouseDown()
 	if currentMouseKey and IsMouseButtonDown() then
 		MusicianMIDI.Keyboard.OnVirtualKey(currentMouseKey, true)
 	end
 end
 
 --- Virtual keyboard button mouse up handler
--- @param button (Button)
-function MusicianMIDI.Keyboard.OnVirtualKeyMouseUp(button)
+--
+function MusicianMIDI.Keyboard.OnVirtualKeyMouseUp()
 	if currentMouseKey and not(IsMouseButtonDown()) then
 		MusicianMIDI.Keyboard.OnVirtualKey(currentMouseKey, false)
 	end
@@ -488,23 +508,21 @@ function MusicianMIDI.Keyboard.SetSplit(isSplit)
 	local frame = MusicianMIDIKeyboard
 
 	frame.splitButton:SetChecked(isSplit)
-
+	Musician.Live.AllNotesOff()
 	if isSplit then
-		Musician.Live.AllNotesOff(LAYER.UPPER)
 		MSA_DropDownMenu_EnableDropDown(frame.lowerInstrumentDropdown)
 		MSA_DropDownMenu_EnableDropDown(frame.lowerTransposeDropdown)
 		frame.lowerLabel:SetFontObject(GameFontHighlight)
 		frame.splitKeyEditBox:SetText(Musician.Sampler.NoteName(MusicianMIDI.Keyboard.GetSplitKey()))
 		frame.splitKeyEditBox:Enable()
 	else
-		Musician.Live.AllNotesOff(LAYER.LOWER)
 		MSA_DropDownMenu_DisableDropDown(frame.lowerInstrumentDropdown)
 		MSA_DropDownMenu_DisableDropDown(frame.lowerTransposeDropdown)
 		frame.lowerLabel:SetFontObject(GameFontDisable)
 		frame.splitKeyEditBox:SetText('--')
 		frame.splitKeyEditBox:Disable()
 	end
-	refreshPianoKeyboard()
+	refreshPianoKeyboardColors()
 end
 
 --- Indicates whenever the keyboard is in split mode
@@ -517,7 +535,8 @@ end
 -- @param key (int)
 function MusicianMIDI.Keyboard.SetSplitKey(key)
 	splitKey = key
-	refreshPianoKeyboard()
+	Musician.Live.AllNotesOff()
+	refreshPianoKeyboardColors()
 	local frame = MusicianMIDIKeyboard
 	if MusicianMIDI.Keyboard.GetSplit() then
 		frame.splitKeyEditBox:SetText(Musician.Sampler.NoteName(key))
