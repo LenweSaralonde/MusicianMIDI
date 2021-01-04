@@ -612,7 +612,7 @@ function MusicianMIDI.Keyboard.OnLiveNoteOff(event, key, layer, isChordNote, sou
 end
 
 --- Set sustain
--- @param sustain
+-- @param value (boolean)
 function MusicianMIDI.Keyboard.SetSustain(value)
 	-- Always sustain upper only if not in split mode
 	if not(MusicianMIDI.Keyboard.IsSplit()) then
