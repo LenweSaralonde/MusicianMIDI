@@ -18,6 +18,30 @@ local ICON = {
 	["LIVE_MODE"] = Musician.Icons.Speaker
 }
 
+local KEY_TEXTURE_SLICE_WIDTH = 8 / 128
+local KEY_TEXTURE_SLICE_HEIGHT = 80 / 128
+local KEY_GLOW_TEXTURE_SLICE_WIDTH = 16 / 128
+local KEY_GLOW_TEXTURE_SLICE_HEIGHT = 96 / 128
+local KEY_TEXTURE_PIXEL = .5 / 128
+local KEY_TEXTURE_SLICES = {
+	WhiteUpLeft = { 0, 1 * KEY_TEXTURE_SLICE_WIDTH },
+	WhiteUpRight = { 1 * KEY_TEXTURE_SLICE_WIDTH, 2 * KEY_TEXTURE_SLICE_WIDTH },
+	WhiteDownFullLeft = { 2 * KEY_TEXTURE_SLICE_WIDTH, 3 * KEY_TEXTURE_SLICE_WIDTH },
+	WhiteDownFullRight = { 3 * KEY_TEXTURE_SLICE_WIDTH, 4 * KEY_TEXTURE_SLICE_WIDTH },
+	WhiteDownBlackLeft = { 4 * KEY_TEXTURE_SLICE_WIDTH, 5 * KEY_TEXTURE_SLICE_WIDTH },
+	WhiteDownBlackRight = { 5 * KEY_TEXTURE_SLICE_WIDTH, 6 * KEY_TEXTURE_SLICE_WIDTH },
+	BlackUpLeft = { 6 * KEY_TEXTURE_SLICE_WIDTH + KEY_TEXTURE_PIXEL, 7 * KEY_TEXTURE_SLICE_WIDTH + KEY_TEXTURE_PIXEL },
+	BlackUpRight = { 7 * KEY_TEXTURE_SLICE_WIDTH + KEY_TEXTURE_PIXEL, 8 * KEY_TEXTURE_SLICE_WIDTH + KEY_TEXTURE_PIXEL },
+	BlackDownLeft = { 8 * KEY_TEXTURE_SLICE_WIDTH + KEY_TEXTURE_PIXEL, 9 * KEY_TEXTURE_SLICE_WIDTH + KEY_TEXTURE_PIXEL },
+	BlackDownRight = { 9 * KEY_TEXTURE_SLICE_WIDTH + KEY_TEXTURE_PIXEL, 10 * KEY_TEXTURE_SLICE_WIDTH + KEY_TEXTURE_PIXEL },
+	WhiteGlowFullLeft = { 7 * KEY_GLOW_TEXTURE_SLICE_WIDTH, 6 * KEY_GLOW_TEXTURE_SLICE_WIDTH },
+	WhiteGlowFullRight = { 6 * KEY_GLOW_TEXTURE_SLICE_WIDTH, 7 * KEY_GLOW_TEXTURE_SLICE_WIDTH },
+	WhiteGlowBlackLeft = { 5 * KEY_GLOW_TEXTURE_SLICE_WIDTH, 6 * KEY_GLOW_TEXTURE_SLICE_WIDTH },
+	WhiteGlowBlackRight = { 6 * KEY_GLOW_TEXTURE_SLICE_WIDTH, 5 * KEY_GLOW_TEXTURE_SLICE_WIDTH },
+	BlackGlowLeft = { 7 * KEY_GLOW_TEXTURE_SLICE_WIDTH, 8 * KEY_GLOW_TEXTURE_SLICE_WIDTH },
+	BlackGlowRight = { 8 * KEY_GLOW_TEXTURE_SLICE_WIDTH, 7 * KEY_GLOW_TEXTURE_SLICE_WIDTH },
+}
+
 local transpose = {
 	[LAYER.UPPER] = 0,
 	[LAYER.LOWER] = 0,
@@ -163,7 +187,11 @@ end
 function refreshPianoKeyboardLayout()
 
 	local frame = MusicianMIDIKeyboard
-	local container = MusicianMIDIKeyboard.pianoKeys
+	local container = frame.pianoKeys
+	local glowFrame = frame.pianoKeysGlow
+
+	-- Raise key glow frame above the container
+	glowFrame:SetFrameLevel(container:GetFrameLevel() + 10)
 
 	-- Get bounds and count white keys
 	local minKey, maxKey = Musician.MIN_KEY, Musician.MAX_KEY
@@ -196,42 +224,59 @@ function refreshPianoKeyboardLayout()
 			button:SetWidth(w)
 			button:SetHeight(container:GetHeight())
 			button:SetPoint('TOPLEFT', x, 0)
-			button.isFirst = key == from
-			button.isLast = key == to
-			if octaveKey == 4 or octaveKey == 11 then -- No black key between E-F and B-C
+
+			-- No black key between E-F and B-C
+			if octaveKey == 4 or octaveKey == 11 then
 				x = x + w
 			else
 				x = x + w / 2
 			end
 
+			button.isFirst = key == from
+			button.isLast = key == to
+			button.isBlack = octaveKey == 1 or octaveKey == 3 or octaveKey == 6 or octaveKey == 8 or octaveKey == 10
+			button.hasBlackLeft = not(button.isFirst) and (octaveKey == 2 or octaveKey == 4 or octaveKey == 7 or octaveKey == 9 or octaveKey == 11)
+			button.hasBlackRight = not(button.isLast) and (octaveKey == 0 or octaveKey == 2 or octaveKey == 5 or octaveKey == 7 or octaveKey == 9)
+
+			local glowSliceLeft, glowSliceRight
+
 			-- Black key
-			if octaveKey == 1 or octaveKey == 3 or octaveKey == 6 or octaveKey == 8 or octaveKey == 10 then
+			if button.isBlack then
 				-- Only a part of the black key is clickable
 				button:SetHitRectInsets(0.2 * w, 0.2 * w, 0, .42 * h)
 
-				-- Resize textures to clickable area
+				-- Resize color texture to clickable area
 				button.color:SetSize(10, 46)
-				button.glowColor:SetSize(12, 80)
-				button.glowColor:SetPoint('CENTER', -2, 16)
 				button.highlight:SetSize(0.6 * w, .58 * h)
 				button.highlight:SetPoint('TOP', -2, -6)
 
-				-- Black keys are on top of the white ones
-				button:SetFrameLevel(button:GetParent():GetFrameLevel() + 2)
+				-- Set glow texture slices
+				glowSliceLeft = KEY_TEXTURE_SLICES.BlackGlowLeft
+				glowSliceRight = KEY_TEXTURE_SLICES.BlackGlowRight
 			else -- White key
 				-- The whole key is clickable
 				button:SetHitRectInsets(0, 0, 0, 0)
 
-				-- Resize textures to clickable area
+				-- Resize color texture clickable area
 				button.color:SetSize(16, 80)
-				button.glowColor:SetSize(22, 160)
-				button.glowColor:SetPoint('CENTER', 0, -2.5)
 				button.highlight:SetSize(w, h)
 				button.highlight:SetPoint('TOP', 0, -10)
 
-				-- White keys are under the black ones
-				button:SetFrameLevel(button:GetParent():GetFrameLevel() + 1)
+				-- Set glow texture slices
+				glowSliceLeft = button.hasBlackLeft and KEY_TEXTURE_SLICES.WhiteGlowBlackLeft or KEY_TEXTURE_SLICES.WhiteGlowFullLeft
+				glowSliceRight = button.hasBlackRight and KEY_TEXTURE_SLICES.WhiteGlowBlackRight or KEY_TEXTURE_SLICES.WhiteGlowFullRight
 			end
+
+			-- Set black keys on top of the white ones
+			button:SetFrameLevel(button:GetParent():GetFrameLevel() + (button.isBlack and 2 or 1))
+
+			-- Apply glow texture slicing
+			button.glowLeft:SetTexCoord(glowSliceLeft[1], glowSliceLeft[2], 0, KEY_GLOW_TEXTURE_SLICE_HEIGHT)
+			button.glowRight:SetTexCoord(glowSliceRight[1], glowSliceRight[2], 0, KEY_GLOW_TEXTURE_SLICE_HEIGHT)
+
+			-- Attach glow textures to the glow frame
+			button.glowLeft:SetParent(glowFrame)
+			button.glowRight:SetParent(glowFrame)
 
 			-- Set status texture status and show
 			MusicianMIDI.Keyboard.SetVirtualKeyDown(key, button.down)
@@ -264,7 +309,8 @@ function refreshPianoKeyboardColors(onlyForLayer)
 
 			-- Reset volume meter glow
 			button.volumeMeter:Reset()
-			button.glowColor:SetAlpha(0)
+			button.glowLeft:SetAlpha(0)
+			button.glowRight:SetAlpha(0)
 		end
 	end
 end
@@ -432,7 +478,8 @@ end
 -- @param elapsed (number)
 function MusicianMIDI.Keyboard.OnVirtualKeyUpdate(button, elapsed)
 	button.volumeMeter:AddElapsed(elapsed)
-	button.glowColor:SetAlpha(button.volumeMeter:GetLevel() * 1)
+	button.glowLeft:SetAlpha(button.volumeMeter:GetLevel())
+	button.glowRight:SetAlpha(button.volumeMeter:GetLevel())
 end
 
 --- Set note event
@@ -467,37 +514,24 @@ function MusicianMIDI.Keyboard.SetVirtualKeyDown(noteKey, down)
 	if not(button) then return end
 
 	button.down = down
-
 	local octaveKey = button.key % 12
-	local texturePosition = 0
 
-	-- Black key
-	if octaveKey == 1 or octaveKey == 3 or octaveKey == 6 or octaveKey == 8 or octaveKey == 10 then
+	local sliceLeft, sliceRight
+	if button.isBlack then
+		sliceLeft = down and KEY_TEXTURE_SLICES.BlackDownLeft or KEY_TEXTURE_SLICES.BlackUpLeft
+		sliceRight = down and KEY_TEXTURE_SLICES.BlackDownRight or KEY_TEXTURE_SLICES.BlackUpRight
+	else
 		if down then
-			texturePosition = 5
+			sliceLeft = button.hasBlackLeft and KEY_TEXTURE_SLICES.WhiteDownBlackLeft or KEY_TEXTURE_SLICES.WhiteDownFullLeft
+			sliceRight = button.hasBlackRight and KEY_TEXTURE_SLICES.WhiteDownBlackRight or KEY_TEXTURE_SLICES.WhiteDownFullRight
 		else
-			texturePosition = 6
+			sliceLeft = KEY_TEXTURE_SLICES.WhiteUpLeft
+			sliceRight = KEY_TEXTURE_SLICES.WhiteUpRight
 		end
-		button.texture:SetTexCoord(.125 * texturePosition + .0078, .125 * texturePosition + .125, 0, .625)
-	else -- White key
-		local hasBlackLeft = not(button.isFirst) and (octaveKey == 2 or octaveKey == 4 or octaveKey == 7 or octaveKey == 11)
-		local hasBlackRight = not(button.isLast) and (octaveKey == 0 or octaveKey == 2 or octaveKey == 5 or octaveKey == 7 or octaveKey == 9)
-
-		if down then
-			if not(hasBlackLeft) and hasBlackRight then
-				texturePosition = 2
-			elseif hasBlackLeft and hasBlackRight then
-				texturePosition = 3
-			elseif hasBlackLeft and not(hasBlackRight) then
-				texturePosition = 4
-			else
-				texturePosition = 1
-			end
-		else
-			texturePosition = 0
-		end
-		button.texture:SetTexCoord(.125 * texturePosition + 0, .125 * texturePosition + .125, 0, .625)
 	end
+
+	button.textureLeft:SetTexCoord(sliceLeft[1], sliceLeft[2], 0, KEY_TEXTURE_SLICE_HEIGHT)
+	button.textureRight:SetTexCoord(sliceRight[1], sliceRight[2], 0, KEY_TEXTURE_SLICE_HEIGHT)
 end
 
 --- Enable or disable split keyboard mode

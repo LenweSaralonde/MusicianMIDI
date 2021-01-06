@@ -6,28 +6,38 @@
 		<Size x="16" y="80"/>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture parentKey="texture" file="Interface\AddOns\MusicianMIDI\ui\textures\piano-keys" setAllPoints="true" />
+				<Texture parentKey="textureLeft" file="Interface\AddOns\MusicianMIDI\ui\textures\piano-keys" setAllPoints="true">
+					<Size x="8" y="80"/>
+					<Anchors>
+						<Anchor point="LEFT" />
+					</Anchors>
+				</Texture>
+				<Texture parentKey="textureRight" file="Interface\AddOns\MusicianMIDI\ui\textures\piano-keys" setAllPoints="true">
+					<Size x="8" y="80"/>
+					<Anchors>
+						<Anchor point="RIGHT" />
+					</Anchors>
+				</Texture>
 				<Texture parentKey="color" alphamode="MOD">
 					<Anchors>
 						<Anchor point="TOP" />
 					</Anchors>
 					<Color a="1" r="0" g="1" b="0" />
 				</Texture>
-				<Texture parentKey="glowColor" alpha="0">
+				<Texture parentKey="glowLeft" alpha="0" alphamode="BLEND" file="Interface\AddOns\MusicianMIDI\ui\textures\piano-keys">
+					<Size x="16" y="96"/>
 					<Anchors>
-						<Anchor point="CENTER" />
+						<Anchor point="RIGHT" relativePoint="CENTER" />
 					</Anchors>
-					<Color a="1" r=".854" g=".968" b=".992" />
+					<Color a="1" r=".992" g=".968" b=".854" />
 				</Texture>
-				<MaskTexture parentKey="glowMask" file="Interface\AddOns\Musician\ui\textures\button-glow" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+				<Texture parentKey="glowRight" alpha="0" alphamode="BLEND" file="Interface\AddOns\MusicianMIDI\ui\textures\piano-keys">
+					<Size x="16" y="96"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.glowColor" />
-						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.glowColor" />
+						<Anchor point="LEFT" relativePoint="CENTER" />
 					</Anchors>
-					<MaskedTextures>
-						<MaskedTexture childKey="glowColor"/>
-					</MaskedTextures>
-				</MaskTexture>
+					<Color a="1" r=".992" g=".968" b=".854" />
+				</Texture>
 			</Layer>
 		</Layers>
 		<Scripts>
@@ -79,6 +89,12 @@
 				<Size x="480" y="80" />
 				<Anchors>
 					<Anchor point="BOTTOM" y="20" />
+				</Anchors>
+			</Frame>
+			<Frame name="$parentPianoKeysGlow" parentKey="pianoKeysGlow">
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentPianoKeys" />
+					<Anchor point="TOPLEFT" relativeTo="$parentPianoKeys" />
 				</Anchors>
 			</Frame>
 
