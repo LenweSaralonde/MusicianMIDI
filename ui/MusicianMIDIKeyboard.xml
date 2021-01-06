@@ -62,20 +62,16 @@
 
 	<Frame name="MusicianMIDIKeyboard" inherits="MusicianDialogTemplate" enableKeyboard="true">
 
-		<Size x="520" y="220" />
+		<Size x="520" y="208" />
 
 		<Layers>
 			<Layer level="BACKGROUND">
 
 				<!-- Main title -->
 
-				<FontString name="$parentTitle" inherits="GameFontNormal">
+				<FontString name="$parentTitle" inherits="GameFontNormalLarge">
 					<Anchors>
-						<Anchor point="TOP">
-							<Offset>
-								<AbsDimension x="0" y="-15"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="CENTER" relativePoint="TOP" x="0" y="-32" />
 					</Anchors>
 				</FontString>
 			</Layer>
