@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.1.0
+--------
+* Added split mode
+* Added on-screen piano keyboard
+
 v1.0.6
 --------
 * Updated for WoW Shadowlands 9.0.2
