@@ -27,6 +27,40 @@ function MusicianMIDI:OnEnable()
 	Musician.GetCommands = MusicianMIDI.GetCommands
 end
 
+--- Initialize a locale and returns the initialized message table
+-- @param languageCode (string) Short language code (ie 'en')
+-- @param languageName (string) Locale name (ie "English")
+-- @param localeCode (string) Long locale code (ie 'enUS')
+-- @param[opt] ... (string) Additional locale codes
+-- @return msg (table) Initialized message table
+function MusicianMIDI.InitLocale(languageCode, languageName, localeCode, ...)
+	local localeCodes = { localeCode, ... }
+
+	-- Set English (en) as base locale
+	local baseLocale = languageCode == 'en' and MusicianMIDI.LocaleBase or MusicianMIDI.Locale.en
+
+	-- Init table
+	local msg = Musician.Utils.DeepCopy(baseLocale)
+	MusicianMIDI.Locale[languageCode] = msg
+	msg.LOCALE_NAME = languageName
+	msg.LOCALE_CODES = localeCodes
+
+	-- Set English (en) as the current language by default
+	if languageCode == 'en' then
+		MusicianMIDI.Msg = msg
+	else
+		-- Set localized messages
+		for _, locale in pairs(localeCodes) do
+			if GetLocale() == locale then
+				MusicianMIDI.Msg = msg
+				break
+			end
+		end
+	end
+
+	return msg
+end
+
 --- Return main menu elements
 -- @return menu (table)
 function MusicianMIDI.GetMenu()
