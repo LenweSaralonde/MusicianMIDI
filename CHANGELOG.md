@@ -1,5 +1,8 @@
 Changelog
 =========
+v1.1.1
+--------
+* Improved localization to ease up collaboration
 
 v1.1.0
 --------
