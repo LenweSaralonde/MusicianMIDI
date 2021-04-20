@@ -1,5 +1,10 @@
 Changelog
 =========
+
+v1.1.2
+--------
+* TOC update for WoW Classic patch 1.13.7
+
 v1.1.1
 --------
 * Improved localization to ease up collaboration
