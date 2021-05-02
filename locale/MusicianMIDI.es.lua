@@ -10,19 +10,19 @@
 -- * Check the result in game to make sure your text fits the UI.
 ------------------------------------------------------------------------
 
-local msg = MusicianMIDI.InitLocale("zh", "中文", "zhTW", "zhCN")
+local msg = MusicianMIDI.InitLocale("es", "Español", "esMX", "esES")
 
 ------------------------------------------------------------------------
 ---------------- ↑↑↑ DO NOT EDIT THE LINES ABOVE ! ↑↑↑  ----------------
 ------------------------------------------------------------------------
 
-msg.MENU_MIDI_KEYBOARD = "启动MIDI键盘"
-msg.COMMAND_LIVE_KEYBOARD = "启动MIDI键盘"
-msg.MIDI_KEYBOARD_TITLE = "MIDI键盘"
-msg.SELECT_INSTRUMENT = "选择乐器"
-msg.INSTRUMENT_OCTAVE = "八度移调"
+-- msg.MENU_MIDI_KEYBOARD = "Open the MIDI keyboard"
+-- msg.COMMAND_LIVE_KEYBOARD = "Open the MIDI keyboard"
+-- msg.MIDI_KEYBOARD_TITLE = "MIDI keyboard"
+-- msg.SELECT_INSTRUMENT = "Select instrument"
+-- msg.INSTRUMENT_OCTAVE = "Octave"
 
-msg.SPLIT_KEYBOARD = "分割"
-msg.SET_SPLIT_KEY_HINT = "按MIDI键盘左半部分的第一个键。"
+-- msg.SPLIT_KEYBOARD = "Split"
+-- msg.SET_SPLIT_KEY_HINT = "Press the first key of the upper section on your MIDI piano keyboard."
 
-msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION = "你的Musician版本太旧以致不能使用Musician MIDI，请升级。"
+-- msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION = "Your version of Musician is too old for Musician MIDI. Please update it."
