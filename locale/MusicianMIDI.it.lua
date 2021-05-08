@@ -16,13 +16,13 @@ local msg = MusicianMIDI.InitLocale("it", "Italiano", "itIT")
 ---------------- ↑↑↑ DO NOT EDIT THE LINES ABOVE ! ↑↑↑  ----------------
 ------------------------------------------------------------------------
 
--- msg.MENU_MIDI_KEYBOARD = "Open the MIDI keyboard"
--- msg.COMMAND_LIVE_KEYBOARD = "Open the MIDI keyboard"
--- msg.MIDI_KEYBOARD_TITLE = "MIDI keyboard"
--- msg.SELECT_INSTRUMENT = "Select instrument"
--- msg.INSTRUMENT_OCTAVE = "Octave"
+msg.MENU_MIDI_KEYBOARD = "Apri la tastiera MIDI"
+msg.COMMAND_LIVE_KEYBOARD = "Apri la tastiera MIDI"
+msg.MIDI_KEYBOARD_TITLE = "Tastiera MIDI"
+msg.SELECT_INSTRUMENT = "Seleziona lo strumento"
+msg.INSTRUMENT_OCTAVE = "Ottava"
 
--- msg.SPLIT_KEYBOARD = "Split"
--- msg.SET_SPLIT_KEY_HINT = "Press the first key of the upper section on your MIDI piano keyboard."
+msg.SPLIT_KEYBOARD = "Diviso"
+msg.SET_SPLIT_KEY_HINT = "Premere il primo tasto della sezione superiore sulla tastiera del pianoforte MIDI."
 
--- msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION = "Your version of Musician is too old for Musician MIDI. Please update it."
+msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION = "La tua versione di Musician è troppo vecchia per Musician MIDI. Per favore aggiornalo."

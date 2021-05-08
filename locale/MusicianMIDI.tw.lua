@@ -16,13 +16,13 @@ local msg = MusicianMIDI.InitLocale("tw", "繁體中文", "zhTW")
 ---------------- ↑↑↑ DO NOT EDIT THE LINES ABOVE ! ↑↑↑  ----------------
 ------------------------------------------------------------------------
 
--- msg.MENU_MIDI_KEYBOARD = "Open the MIDI keyboard"
--- msg.COMMAND_LIVE_KEYBOARD = "Open the MIDI keyboard"
--- msg.MIDI_KEYBOARD_TITLE = "MIDI keyboard"
--- msg.SELECT_INSTRUMENT = "Select instrument"
--- msg.INSTRUMENT_OCTAVE = "Octave"
+msg.MENU_MIDI_KEYBOARD = "啟動MIDI鍵盤"
+msg.COMMAND_LIVE_KEYBOARD = "啟動MIDI鍵盤"
+msg.MIDI_KEYBOARD_TITLE = "MIDI鍵盤"
+msg.SELECT_INSTRUMENT = "選擇樂器"
+msg.INSTRUMENT_OCTAVE = "八度移調"
 
--- msg.SPLIT_KEYBOARD = "Split"
--- msg.SET_SPLIT_KEY_HINT = "Press the first key of the upper section on your MIDI piano keyboard."
+msg.SPLIT_KEYBOARD = "分割"
+msg.SET_SPLIT_KEY_HINT = "按MIDI鍵盤左半部分的第一個鍵。"
 
--- msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION = "Your version of Musician is too old for Musician MIDI. Please update it."
+msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION = "你的Musician版本太舊以致不能使用Musician MIDI，請升級。"
