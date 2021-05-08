@@ -16,13 +16,13 @@ local msg = MusicianMIDI.InitLocale("ko", "한국어", "koKR")
 ---------------- ↑↑↑ DO NOT EDIT THE LINES ABOVE ! ↑↑↑  ----------------
 ------------------------------------------------------------------------
 
--- msg.MENU_MIDI_KEYBOARD = "Open the MIDI keyboard"
--- msg.COMMAND_LIVE_KEYBOARD = "Open the MIDI keyboard"
--- msg.MIDI_KEYBOARD_TITLE = "MIDI keyboard"
--- msg.SELECT_INSTRUMENT = "Select instrument"
--- msg.INSTRUMENT_OCTAVE = "Octave"
+msg.MENU_MIDI_KEYBOARD = "MIDI 키보드 열기"
+msg.COMMAND_LIVE_KEYBOARD = "MIDI 키보드 열기"
+msg.MIDI_KEYBOARD_TITLE = "MIDI 키보드"
+msg.SELECT_INSTRUMENT = "악기 선택"
+msg.INSTRUMENT_OCTAVE = "옥타브"
 
--- msg.SPLIT_KEYBOARD = "Split"
--- msg.SET_SPLIT_KEY_HINT = "Press the first key of the upper section on your MIDI piano keyboard."
+msg.SPLIT_KEYBOARD = "스플릿"
+msg.SET_SPLIT_KEY_HINT = "MIDI 피아노 키보드에서 상단 섹션의 첫 번째 건반을 누릅니다."
 
--- msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION = "Your version of Musician is too old for Musician MIDI. Please update it."
+msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION = "Musician 버전이 Musician MIDI에 비해 너무 오래되었습니다. 업데이트하십시오."
