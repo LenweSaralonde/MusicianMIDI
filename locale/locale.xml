@@ -9,6 +9,7 @@
 	<Script file="MusicianMIDI.de.lua" />
 	<Script file="MusicianMIDI.it.lua" />
 	<Script file="MusicianMIDI.ru.lua" />
-	<Script file="MusicianMIDI.kr.lua" />
+	<Script file="MusicianMIDI.ko.lua" />
 	<Script file="MusicianMIDI.zh.lua" />
+	<Script file="MusicianMIDI.tw.lua" />
 </Ui>
