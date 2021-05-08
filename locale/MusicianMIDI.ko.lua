@@ -10,7 +10,7 @@
 -- * Check the result in game to make sure your text fits the UI.
 ------------------------------------------------------------------------
 
-local msg = MusicianMIDI.InitLocale("kr", "한국어", "koKR")
+local msg = MusicianMIDI.InitLocale("ko", "한국어", "koKR")
 
 ------------------------------------------------------------------------
 ---------------- ↑↑↑ DO NOT EDIT THE LINES ABOVE ! ↑↑↑  ----------------
