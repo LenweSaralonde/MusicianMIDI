@@ -7,7 +7,8 @@ v1.1.3
 
 v1.1.2
 ------
-* TOC Interface bump for WoW 9.0.5
+* TOC Interface bump for WoW Shadowlands 9.0.5
+* TOC update for WoW Classic patch 1.13.7
 
 v1.1.1
 ------
@@ -21,6 +22,7 @@ v1.1.0
 v1.0.6
 ------
 * Updated for WoW Shadowlands 9.0.2
+* Updated for WoW Classic 1.13.6
 
 v1.0.5
 ------
