@@ -1,0 +1,17 @@
+## Interface: 90100
+## Title: Musician MIDI
+## Notes: Perform live music in Musician using your MIDI keyboard
+## Version: 1.1.3
+## RequiredDeps: Musician
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: MusicianMIDI_Storage
+
+core\MusicianMIDI.lua
+
+constants\MusicianMIDI.Constants.lua
+
+locale\locale.xml
+
+ui\MusicianMIDIKeyboard.lua
+ui\MusicianMIDIKeyboard.xml
