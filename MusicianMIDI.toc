@@ -1,7 +1,7 @@
-## Interface: 90005
+## Interface: 90100
 ## Title: Musician MIDI
 ## Notes: Perform live music in Musician using your MIDI keyboard
-## Version: 1.1.4
+## Version: 1.1.5
 ## RequiredDeps: Musician
 ## DefaultState: Enabled
 ## LoadOnDemand: 0

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.1.5
+------
+* Dummy version bump to force refresh CurseForge's client API.
+
 v1.1.4
 ------
 * Unified version for WoW Shadowlands, WoW Classic and WoW Burning Crusade Classic.
