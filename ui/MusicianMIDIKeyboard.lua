@@ -608,17 +608,18 @@ end
 function MusicianMIDI.Keyboard.OnLiveNoteOn(event, key, layer, instrumentData, isChordNote, source)
 	if source ~= MusicianMIDI.Keyboard or instrumentData == nil then return end
 
+	local keyboardKey = key
 	if transpose[layer] then
-		key = key - transpose[layer]
+		keyboardKey = keyboardKey - transpose[layer]
 	end
 
-	local button = MusicianMIDIKeyboard.pianoKeyButtons[key]
+	local button = MusicianMIDIKeyboard.pianoKeyButtons[keyboardKey]
 
 	if not(button) then
 		return
 	end
 
-	button.volumeMeter:NoteOn(instrumentData)
+	button.volumeMeter:NoteOn(instrumentData, key)
 	button.volumeMeter.gain = isChordNote and .5 or 1 -- Make auto-chord notes dimmer
 	button.volumeMeter.entropy = button.volumeMeter.entropy / 2
 end
