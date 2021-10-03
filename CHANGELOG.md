@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.2.0
+------
+* Updated for Musician 1.8.
+* Updated for WoW Classic Era 1.14 and BC Classic 2.5.2.
+
 v1.1.5
 ------
 * Dummy version bump to force refresh CurseForge's client API.
