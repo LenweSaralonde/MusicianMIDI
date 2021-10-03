@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 20502
 ## Title: Musician MIDI
 ## Notes: Perform live music in Musician using your MIDI keyboard
 ## Version: 1.2.0
