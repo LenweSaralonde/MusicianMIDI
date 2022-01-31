@@ -22,7 +22,7 @@ The __Classic__ version is recommended if you run Windows because it's easy to u
 
 ## How to play
 
-![MIDI keyboard UI](./img/musician-midi-keyboard-ui.png)
+![MIDI keyboard UI](https://raw.githubusercontent.com/LenweSaralonde/MusicianMIDI/master/img/musician-midi-keyboard-ui.png)
 
 In WoW, click on the Musician minimap icon then **Open MIDI keyboard** or type `/mus midi`. You can play live using your MIDI keyboard as long as the MIDI keyboard window is focused in game.
 
