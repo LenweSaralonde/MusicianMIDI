@@ -3,7 +3,7 @@ local msg = MusicianMIDI.LocaleBase
 
 if Musician.LocalizationTeam then
 	tAppendAll(Musician.LocalizationTeam, {
-		{ 'de', Musician.DefaultTranslator },
+		{ 'de', "Lyntharia" },
 		{ 'en', "LenweSaralonde" },
 		{ 'es', Musician.DefaultTranslator },
 		{ 'fr', "LenweSaralonde" },
