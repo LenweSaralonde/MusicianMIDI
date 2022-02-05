@@ -30,7 +30,7 @@ The keyboard can be splitted in 2 layers to set a different instrument and/or oc
 
 The keyboard can also be activated by clicking the on-screen keyboard keys.
 
-Since MusicianMIDI relies on computer keyboard keystroke emulation, the amount of keys is limited. The piano keyboard range goes from C2 (36) to C7 (96) which covers 5 octaves. Playing out of range keys has no effect.
+Since MusicianMIDI relies on computer keyboard keystroke emulation, the amount of keys is limited. The piano keyboard range goes from F1 (29) to F7 (101) which covers 6 octaves. Playing out of range keys has no effect.
 
 ## Deal with latency
 As with the regular live keyboard interface, you may experience some latency between the moment you press a key and when the sound actually starts playing, which can be awkward for a live performance. Unlike music applications, the WoW client does not support low latency ASIO drivers.
