@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.3.0
+------
+* Extended the piano keyboard to 76 keys.
+
 v1.2.3
 ------
 * German translation by Lyntharia.
