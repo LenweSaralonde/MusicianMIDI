@@ -16,8 +16,10 @@ MusicianMIDI needs to the function keys to be enabled. Also make sure you don't 
 
 1. Go to **System Preferences** > **Keyboard**.
 2. Check **Use F1, F2, etc. keys as standard function keys**.
+![Function keys](https://raw.githubusercontent.com/LenweSaralonde/MusicianMIDI/master/img/macos-keyboard-function-keys-configuration.png)
 3. Go to the **Shortcuts** tab.
 4. Click **Mission Control** and uncheck the **Show Desktop** shortcut if the **F11** key is set (default).
+![Shortcuts](https://raw.githubusercontent.com/LenweSaralonde/MusicianMIDI/master/img/macos-keyboard-shortcuts-configuration.png)
 
 ### 2. Permissions
 Bome MIDI Translator needs accessibility permissions to send keystrokes.
