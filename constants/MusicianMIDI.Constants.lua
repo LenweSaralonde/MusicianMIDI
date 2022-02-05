@@ -1,4 +1,7 @@
 MusicianMIDI.KEYS = {
+	'ENTER',
+	'DELETE',
+	'INSERT',
 	'BACKSPACE',
 	'TAB',
 	'NUMPADDECIMAL',
@@ -74,9 +77,9 @@ MusicianMIDI.KEYS = {
 	'DOWN',
 }
 
-MusicianMIDI.START_KEY = 29;
+MusicianMIDI.START_KEY = 28
 
-MusicianMIDI.END_KEY = MusicianMIDI.START_KEY + #MusicianMIDI.KEYS;
+MusicianMIDI.END_KEY = MusicianMIDI.START_KEY + #MusicianMIDI.KEYS
 
 MusicianMIDI.KEY_BINDINGS = {}
 for id, key in pairs(MusicianMIDI.KEYS) do

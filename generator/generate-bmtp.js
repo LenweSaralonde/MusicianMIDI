@@ -3,6 +3,9 @@
 const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 const MAPPING = [
+	'100D', // ENTER
+	'112E', // DELETE
+	'112D', // INSERT
 	'1008', // BACKSPACE
 	'1009', // TAB
 	'106E', // NUMPADDECIMAL
@@ -78,7 +81,7 @@ const MAPPING = [
 	'1128', // DOWN
 ];
 
-const START = 29;
+const START = 28;
 
 let bmtp =
 	`[Project]\n` +
