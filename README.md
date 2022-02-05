@@ -29,6 +29,9 @@ Bome MIDI Translator needs accessibility permissions to send keystrokes.
 3. Click on the padlock 🔒 to allow modifications.
 4. Check **MIDI Translator Pro** in the list.
 
+![Accessibility](https://raw.githubusercontent.com/LenweSaralonde/MusicianMIDI/master/img/macos-accessibility-configuration.png)
+
+
 ## Configure the MIDI input device
 
 
