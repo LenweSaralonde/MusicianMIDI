@@ -51,7 +51,7 @@ Bome MIDI Translator needs accessibility permissions to send keystrokes.
 ![MIDI Translator Pro configuration](https://raw.githubusercontent.com/LenweSaralonde/MusicianMIDI/master/img/bome-midi-translator-pro-configuration.png)
 
 ## How to play
-![MIDI keyboard UI](https://raw.githubusercontent.com/LenweSaralonde/MusicianMIDI/master/img/musician-midi-keyboard-ui.png)
+![MIDI keyboard UI](https://raw.githubusercontent.com/LenweSaralonde/MusicianMIDI/master/img/musician-midi-keyboard.png)
 
 In WoW, click on the Musician minimap icon then **Open MIDI keyboard** or type `/mus midi`. You can play live using your MIDI keyboard as long as the MIDI keyboard window is focused in game.
 
