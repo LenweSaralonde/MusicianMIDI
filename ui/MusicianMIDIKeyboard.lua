@@ -381,12 +381,6 @@ function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 
 	MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
 
-	-- Close window
-	if keyValue == 'ESCAPE' and down then
-		MusicianMIDIKeyboard:Hide()
-		return
- 	end
-
 	-- Sustain (pedal)
 	if keyValue == 'SPACE' then
 		MusicianMIDI.Keyboard.SetSustain(down)

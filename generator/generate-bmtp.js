@@ -5,7 +5,7 @@ const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 
 const MAPPING = [
 	'100D', // ENTER
 	'112E', // DELETE
-	'112D', // INSERT
+	'101B', // ESCAPE
 	'1008', // BACKSPACE
 	'1009', // TAB
 	'106E', // NUMPADDECIMAL

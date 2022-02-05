@@ -1,7 +1,7 @@
 MusicianMIDI.KEYS = {
 	'ENTER',
 	'DELETE',
-	'INSERT',
+	'ESCAPE',
 	'BACKSPACE',
 	'TAB',
 	'NUMPADDECIMAL',
