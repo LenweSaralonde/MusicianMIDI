@@ -35,11 +35,15 @@ Bome MIDI Translator needs accessibility permissions to send keystrokes.
 2. Open the **Midi In** menu.
 3. Select your MIDI input device.
 
+![MIDI Translator Classic configuration](https://raw.githubusercontent.com/LenweSaralonde/MusicianMIDI/master/img/bome-midi-translator-classic-configuration.png)
+
 ### For Bome MIDI Translator __Pro__:
 1. Connect your MIDI controller.
 2. Open the `Musician preset.bmtp` file that is provided in the `Interface/AddOns/MusicianMIDI` folder.
 3. Open the **MIDI** menu option then click **Project Default MIDI Ports**.
 4. Select your **MIDI INPUT** device in the right column under **MIDI IN Port**.
+
+![MIDI Translator Pro configuration](https://raw.githubusercontent.com/LenweSaralonde/MusicianMIDI/master/img/bome-midi-translator-pro-configuration.png)
 
 ## How to play
 ![MIDI keyboard UI](https://raw.githubusercontent.com/LenweSaralonde/MusicianMIDI/master/img/musician-midi-keyboard-ui.png)
