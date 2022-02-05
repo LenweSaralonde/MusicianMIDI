@@ -64,11 +64,9 @@
 
 		<Size x="640" y="208" />
 
+		<!-- Main title -->
 		<Layers>
 			<Layer level="BACKGROUND">
-
-				<!-- Main title -->
-
 				<FontString name="$parentTitle" inherits="GameFontNormalLarge">
 					<Anchors>
 						<Anchor point="CENTER" relativePoint="TOP" x="0" y="-32" />
@@ -103,7 +101,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad inherit="prepend">
-						MSA_DropDownMenu_SetWidth(self, 115)
+						MSA_DropDownMenu_SetWidth(self, 165)
 					</OnLoad>
 				</Scripts>
 			</Frame>
@@ -143,7 +141,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad inherit="prepend">
-						MSA_DropDownMenu_SetWidth(self, 115)
+						MSA_DropDownMenu_SetWidth(self, 165)
 					</OnLoad>
 				</Scripts>
 			</Frame>
