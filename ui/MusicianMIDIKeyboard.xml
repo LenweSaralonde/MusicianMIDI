@@ -62,7 +62,7 @@
 
 	<Frame name="MusicianMIDIKeyboard" inherits="MusicianDialogTemplate" enableKeyboard="true">
 
-		<Size x="520" y="208" />
+		<Size x="613.333333" y="208" />
 
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -82,7 +82,7 @@
 			<!-- Virtual piano keyboard -->
 
 			<Frame name="$parentPianoKeys" parentKey="pianoKeys">
-				<Size x="480" y="80" />
+				<Size x="573.333333" y="80" />
 				<Anchors>
 					<Anchor point="BOTTOM" y="20" />
 				</Anchors>
