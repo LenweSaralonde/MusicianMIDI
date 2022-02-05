@@ -58,6 +58,14 @@ function getPreset(presetId, presetName, rules) {
 	return bmtp;
 }
 
+/**
+ * Generate the keystroke command for Bome MIDI Translator.
+ * @param {array} nibbles
+ * @return {string}
+ */
+function getKeystrokeCommand(nibbles) {
+	return KEYSTROKE_COMMAND + KEY_NIBBLES[nibbles[0]] + KEY_NIBBLES[nibbles[1]];
+}
 
 /**
  * Main routine
@@ -70,19 +78,19 @@ function main() {
 		const channelHex = channel.toString(16).toUpperCase();
 
 		// 8x nn vv   Note off
-		setRule(message_rules, `Note off ch.${channel}`, `8${channelHex}ppqq`, KEYSTROKE_COMMAND + KEY_NIBBLES[0x8] + KEY_NIBBLES[channel]);
+		setRule(message_rules, `Note off ch.${channel}`, `8${channelHex}ppqq`, getKeystrokeCommand([0x8, channel]));
 
 		// 9x nn vv   Note on
-		setRule(message_rules, `Note on ch.${channel}`, `9${channelHex}ppqq`, KEYSTROKE_COMMAND + KEY_NIBBLES[0x9] + KEY_NIBBLES[channel]);
+		setRule(message_rules, `Note on ch.${channel}`, `9${channelHex}ppqq`, getKeystrokeCommand([0x9, channel]));
 
 		// Bx cc vv   Control change
-		setRule(message_rules, `Pedal off ch.${channel}`, `B${channelHex}ppqq`, KEYSTROKE_COMMAND + KEY_NIBBLES[0xB] + KEY_NIBBLES[channel]);
+		setRule(message_rules, `Pedal off ch.${channel}`, `B${channelHex}ppqq`, getKeystrokeCommand([0xB, channel]));
 
 		// Ex v1 v2   Pitch Bender
-		setRule(message_rules, `Pitch bend ch.${channel}`, `E${channelHex}ppqq`, KEYSTROKE_COMMAND + KEY_NIBBLES[0xE] + KEY_NIBBLES[channel]);
+		setRule(message_rules, `Pitch bend ch.${channel}`, `E${channelHex}ppqq`, getKeystrokeCommand([0xE, channel]));
 
 		// Cx pp      Program change
-		setRule(message_rules, `Program change ch.${channel}`, `C${channelHex}pp`, KEYSTROKE_COMMAND + KEY_NIBBLES[0xC] + KEY_NIBBLES[channel]);
+		setRule(message_rules, `Program change ch.${channel}`, `C${channelHex}pp`, getKeystrokeCommand([0xC, channel]));
 	}
 
 	const value_rules1 = [];
@@ -91,7 +99,7 @@ function main() {
 		const hexValue = value.toString(16).toUpperCase().padStart(2, '0');
 		const b1 = Math.floor(value / 16);
 		const b2 = value % 16;
-		const output = KEYSTROKE_COMMAND + KEY_NIBBLES[b1] + KEY_NIBBLES[b2];
+		const output = getKeystrokeCommand([b1, b2]);
 		setRule(value_rules1, `${hexValue}`, `oo${hexValue}`, output, true);
 		setRule(value_rules1, `${hexValue}`, `oo${hexValue}pp`, output);
 		setRule(value_rules2, `${hexValue}`, `oopp${hexValue}`, output, true);

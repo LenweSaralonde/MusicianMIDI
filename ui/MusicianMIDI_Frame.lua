@@ -13,13 +13,30 @@ local ICON = {
 --- Update texts and icons for live and solo modes
 --
 local function updateLiveModeButton()
-	local sourceButton = MusicianKeyboardLiveModeButton
 	local button = MusicianMIDI_FrameLiveModeButton
 
-	button.icon:SetText(sourceButton.icon:GetText())
-	button:SetText(sourceButton:GetText())
-	button.tooltipText = sourceButton.tooltipText
-	button:SetEnabled(sourceButton:IsEnabled())
+	if Musician.Live.IsLiveEnabled() and Musician.Live.CanStream() then
+		button.led:SetAlpha(1)
+		button.tooltipText = Musician.Msg.ENABLE_SOLO_MODE
+	else
+		button.led:SetAlpha(0)
+		button.tooltipText = Musician.Msg.ENABLE_LIVE_MODE
+	end
+
+	if Musician.Live.IsLiveEnabled() and Musician.Live.CanStream() then
+		MusicianKeyboardTitle:SetText(Musician.Msg.PLAY_LIVE)
+		MusicianKeyboardTitleIcon:SetText(ICON.LIVE_MODE)
+	else
+		MusicianKeyboardTitle:SetText(Musician.Msg.PLAY_SOLO)
+		MusicianKeyboardTitleIcon:SetText(ICON.SOLO_MODE)
+	end
+
+	if not(Musician.Live.CanStream()) then
+		button:Disable()
+		button.tooltipText = Musician.Msg.LIVE_MODE_DISABLED
+	else
+		button:Enable()
+	end
 end
 
 --- Init live mode button

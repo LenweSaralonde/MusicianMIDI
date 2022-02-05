@@ -1,4 +1,4 @@
-## Interface: 90105
+## Interface: 11401
 ## Title: Musician MIDI (experimental)
 ## Notes: Control Musician live using any MIDI source
 ## Version: 2.0.0-alpha

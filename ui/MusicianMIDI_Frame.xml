@@ -27,14 +27,17 @@
 
 			<!-- Live play button -->
 
-			<Button name="$parentLiveModeButton" inherits="MusicianIconTextButtonTemplate">
+			<Button name="$parentLiveModeButton" inherits="MusicianLEDTextButtonTemplate">
 				<Size x="105" y="24" />
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" y="-30" x="15" />
 				</Anchors>
-				<OnMouseDown inherit="prepend">
-					PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
-				</OnMouseDown>
+				<Scripts>
+					<OnLoad inherit="append">
+						self:SetText(Musician.Msg.LIVE_MODE)
+						self.led:SetVertexColor(.33, 1, 0, 1)
+					</OnLoad>
+				</Scripts>
 			</Button>
 
 			<!-- Band sync play button -->
