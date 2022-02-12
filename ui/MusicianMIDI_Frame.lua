@@ -80,30 +80,79 @@ end
 --- Initialize MIDI keyboard
 --
 function MusicianMIDI.Frame.Init()
-	MusicianMIDI_Frame:SetScript("OnKeyDown", MusicianMIDI.Frame.OnKeyDown)
+	MusicianMIDI.Frame.InitGamepadBindings()
+
+	MusicianMIDI_Frame:EnableGamePadStick(true)
+	MusicianMIDI_Frame:EnableGamePadButton(true)
+
+	MusicianMIDI_Frame:SetScript("OnGamePadButtonDown", MusicianMIDI.Frame.OnGamePadButtonDown)
 
 	-- Init controls
 	initLiveModeButton()
 	initBandSyncButton()
 end
 
---- OnKeyDown
--- @param event (string)
--- @param keyValue (string)
-MusicianMIDI.Frame.OnKeyDown = function(event, keyValue)
-	local used = false
 
-	-- Close window
-	if keyValue == 'ESCAPE' and down then
-		MusicianMIDI_Frame:Hide()
-		used = true
-
-	-- MIDI message nibble
-	elseif MusicianMIDI.KEY_NIBBLES[keyValue] then
-		MusicianMIDI.readNibble(tonumber(MusicianMIDI.KEY_NIBBLES[keyValue], 16))
-		used = true
+function MusicianMIDI.Frame.InitGamepadBindings()
+	-- Clear all gamepad bindings for the frame
+	local numBindings = GetNumBindings()
+	for i = 1, numBindings do
+		local command, category = GetBinding(i)
+		local keys = { select(3, GetBinding(i)) }
+		for _, key in pairs(keys) do
+			if string.find(key, "PAD") ~= nil and string.find(key, "NUMPAD") == nil then
+				SetOverrideBinding(MusicianMIDI_Frame, true, key, nil)
+			end
+		end
 	end
 
-	-- Default: propagate
-	MusicianMIDI_Frame:SetPropagateKeyboardInput(not(used))
+	-- Disable gamepad cursor control
+	SetGamePadCursorControl(false)
+
+	-- Disabled gaamepad free look
+	SetGamePadFreeLook(false)
+
+	-- Disable directional pad
+	local config = {
+		configID = {}, -- TODO: set dynamic
+		name = "MusicianMIDI",
+		rawButtonMappings = {},
+		rawAxisMappings = {},
+		axisConfigs = {
+			{ axis = "LStickY", scale = 0 },
+			{ axis = "LStickX", scale = 0 }
+		},
+		stickConfigs = {},
+	}
+	C_GamePad.SetConfig(config)
+	C_GamePad.ApplyConfigs()
+end
+
+function MusicianMIDI.Frame.ResetGamePadConfig()
+	C_GamePad.DeleteConfig(C_GamePad.GetConfig({}))
+	C_GamePad.ApplyConfigs()
+end
+
+local lastStatus
+function MusicianMIDI.Frame.OnGamePadButtonDown(self, button)
+	if button == 'PADDUP' then
+		for _, deviceId in pairs(C_GamePad.GetAllDeviceIDs()) do
+			if C_GamePad.GetDeviceRawState(deviceId).name == 'vJoy Device' then
+				local newStatus = debugprofilestop()
+				if lastStatus == nil then
+					lastStatus = newStatus
+				end
+				local delta = newStatus - lastStatus
+				lastStatus = newStatus
+
+				local state = C_GamePad.GetDeviceRawState(deviceId)
+				local axis1 = 128 + floor(state.rawAxes[1] * 128)
+				local axis2 = 128 + floor(state.rawAxes[2] * 128)
+				local axis3 = 128 + floor(state.rawAxes[3] * 128)
+				print(axis1, axis2, axis3, delta)
+				MusicianMIDI.processMIDIMessage(axis1, axis2, axis3)
+				return
+			end
+		end
+	end
 end

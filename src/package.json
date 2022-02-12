@@ -1,0 +1,15 @@
+{
+  "name": "musician-midi-vjoy",
+  "version": "1.0.0",
+  "description": "Converts MIDI messages into joystick entries using vJoy for MusicianMIDI.",
+  "main": "emulator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "midi": "^2.0.0",
+    "vjoy": "^1.2.2"
+  }
+}

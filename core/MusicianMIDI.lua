@@ -7,7 +7,6 @@ local MusicianGetCommands
 local MusicianButtonGetMenu
 
 local channelPrograms = {}
-local buffer = {} -- Current MIDI message buffer
 
 --- OnEnable
 --
@@ -75,38 +74,16 @@ function MusicianMIDI.GetCommands()
 	return commands
 end
 
---- Read incoming MIDI nibble
--- @param nibble (int) 0x0 - 0xF
-function MusicianMIDI.readNibble(nibble)
-	if nibble >= 0x0 and nibble <= 0xF then
-		-- Initiating a new unsupported MIDI message
-		if #buffer == 0 and MusicianMIDI.SUPPORTED_MESSAGE_SIZE[nibble] == nil then
-			return
-		end
-
-		-- Add nibble to buffer
-		table.insert(buffer, nibble)
-
-		-- Process message when buffer is complete
-		if MusicianMIDI.SUPPORTED_MESSAGE_SIZE[buffer[1]] == #buffer then
-			local strBuffer = string.format(strrep('%X%X ', #buffer / 2), unpack(buffer))
-			Musician.Utils.Debug(MODULE_NAME, "incoming message", strBuffer)
-			MusicianMIDI.processMIDIMessage(buffer)
-			buffer = {}
-		end
-	end
-end
-
 --- Process incoming MIDI message
--- @param msg (table)
-function MusicianMIDI.processMIDIMessage(msg)
-	local opcode = msg[1]
-	local channel = msg[2]
-	local value1, value2
-	local layer = MusicianMIDI.getLayer(channel)
+-- @param status (int8)
+-- @param value1 (int8)
+-- @param value2 (int8)
+function MusicianMIDI.processMIDIMessage(status, value1, value2)
 
-	if #msg >= 4 then value1 = 16 * msg[3] + msg[4] end
-	if #msg >= 6 then value2 = 16 * msg[5] + msg[6] end
+	local opcode = bit.rshift(status, 4)
+	local channel = bit.band(status, 0x0F)
+
+	local layer = MusicianMIDI.getLayer(channel)
 
 	-- Note on
 	if opcode == 0x9 and value2 > 0 then
