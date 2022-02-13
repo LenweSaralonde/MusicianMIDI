@@ -9,12 +9,12 @@ MusicianMIDI.KEY_NIBBLES = {
 	['NUMPAD7'] = '7',
 	['NUMPAD8'] = '8',
 	['NUMPAD9'] = '9',
-	['NUMPADDECIMAL'] = 'A',
-	['NUMPADDIVIDE'] = 'B',
-	['NUMPADMULTIPLY'] = 'C',
-	['NUMPADMINUS'] = 'D',
-	['NUMPADPLUS'] = 'E',
-	['INSERT'] = 'F',
+	['A'] = 'A',
+	['B'] = 'B',
+	['C'] = 'C',
+	['D'] = 'D',
+	['E'] = 'E',
+	['F'] = 'F',
 }
 
 -- Supported MIDI messages size in nibbles
