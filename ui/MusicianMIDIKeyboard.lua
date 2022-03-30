@@ -18,6 +18,18 @@ local ICON = {
 	["LIVE_MODE"] = Musician.Icons.Speaker
 }
 
+local MODIFIER_KEYS = {
+	LSHIFT = 'LSHIFT',
+	RSHIFT = 'RSHIFT',
+	LCTRL = 'LCTRL',
+	LMETA = 'LMETA',
+	LALT = 'LALT',
+	RALT = 'RALT',
+	RMETA = 'RMETA',
+	MENU = 'MENU',
+	RCTRL = 'RCTRL'
+}
+
 local KEY_TEXTURE_SLICE_WIDTH = 8 / 128
 local KEY_TEXTURE_SLICE_HEIGHT = 80 / 128
 local KEY_GLOW_TEXTURE_SLICE_WIDTH = 16 / 128
@@ -58,6 +70,8 @@ local splitMode
 local mouseKeysDown = {}
 local keyboardKeysDown = {}
 local currentMouseKey = nil -- Current virtual keyboard button active by the mouse
+local activeModifiers = {}
+local activeModifiersCount = 0
 
 local refreshPianoKeyboardColors
 local refreshPianoKeyboardLayout
@@ -351,6 +365,10 @@ function MusicianMIDI.Keyboard.Init()
 	-- Global key bindings
 	MusicianMIDIKeyboard:SetScript("OnKeyDown", MusicianMIDI.Keyboard.OnPhysicalKeyDown)
 	MusicianMIDIKeyboard:SetScript("OnKeyUp", MusicianMIDI.Keyboard.OnPhysicalKeyUp)
+	MusicianMIDIKeyboard:HookScript("OnHide", function()
+		wipe(activeModifiers)
+		activeModifiersCount = 0
+	end)
 
 	-- Init controls
 	initLiveModeButton()
@@ -379,19 +397,36 @@ end
 -- @param down (boolean)
 function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 
-	MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
-
-	-- Sustain (pedal)
-	if keyValue == 'SPACE' then
-		MusicianMIDI.Keyboard.SetSustain(down)
+	-- Handle modifier keys
+	if MODIFIER_KEYS[keyValue] then
+		if down and activeModifiers[keyValue] == nil then
+			activeModifiers[keyValue] = true
+			activeModifiersCount = activeModifiersCount + 1
+			MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
+		elseif not(down) and activeModifiers[keyValue] ~= nil then
+			activeModifiers[keyValue] = nil
+			activeModifiersCount = activeModifiersCount - 1
+			MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
+		end
 		return
 	end
 
-	-- Note on/note off
-	local noteKey = MusicianMIDI.KEY_BINDINGS[keyValue]
-	if noteKey ~= nil then
-		MusicianMIDI.Keyboard.OnKeyboardKey(noteKey, down)
-		return
+	-- Only process key if there is no active modifier
+	if activeModifiersCount == 0 then
+		-- Sustain (pedal)
+		if keyValue == 'SPACE' then
+			MusicianMIDI.Keyboard.SetSustain(down)
+			MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
+			return
+		end
+
+		-- Note on/note off
+		local noteKey = MusicianMIDI.KEY_BINDINGS[keyValue]
+		if noteKey ~= nil then
+			MusicianMIDI.Keyboard.OnKeyboardKey(noteKey, down)
+			MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
+			return
+		end
 	end
 
 	-- Default: propagate

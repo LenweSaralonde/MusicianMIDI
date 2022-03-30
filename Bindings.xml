@@ -1,0 +1,5 @@
+<Bindings>
+	<Binding name="MUSICIANMIDITOGGLE" category="ADDONS">
+		MusicianMIDIKeyboard:Toggle()
+	</Binding>
+</Bindings>

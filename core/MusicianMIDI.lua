@@ -11,8 +11,13 @@ local MusicianButtonGetMenu
 function MusicianMIDI:OnEnable()
 	Musician.Utils.Debug(MODULE_NAME, 'MusicianMIDI', 'OnInitialize')
 
+	-- Init bindings names
+	_G.BINDING_NAME_MUSICIANMIDITOGGLE = MusicianMIDI.Msg.COMMAND_LIVE_KEYBOARD
+
 	-- Incompatible Musician version
-	local hasMissingFunction = Musician.Live.SetSustain == nil or Musician.Sampler.IsInstrumentPlucked == nil
+	local hasMissingFunction = Musician.Live.SetSustain == nil
+		or Musician.Sampler.IsInstrumentPlucked == nil
+		or MusicianMIDIKeyboard.Toggle == nil
 	if hasMissingFunction or Musician.Utils.VersionCompare(GetAddOnMetadata("Musician", "Version"), '1.6.0.5') < 0 then
 		Musician.Utils.Error(MusicianMIDI.Msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION)
 		return
