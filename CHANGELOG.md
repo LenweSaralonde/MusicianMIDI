@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.3.2
+------
+* Added keyboard binding.
+
 v1.3.1
 ------
 * TOC bump for WoW 9.2 and WoW Classic 1.14.2.
