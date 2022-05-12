@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.3.3
+------
+* TOC bump for WoW Classic Era.
+
 v1.3.2
 ------
 * Added keyboard binding.
