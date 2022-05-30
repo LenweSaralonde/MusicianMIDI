@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.3.4
+------
+* TOC bump for WoW 9.2.5.
+
 v1.3.3
 ------
 * TOC bump for WoW Classic Era.
