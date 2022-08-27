@@ -73,7 +73,6 @@ function MusicianMIDI.GetMenu()
 	local menu = MusicianButtonGetMenu()
 
 	-- Show MIDI keyboard
-	local index, row
 	for index, row in pairs(menu) do
 		-- Insert after the standard "Show keyboard" option
 		if row.text == Musician.Msg.MENU_SHOW_KEYBOARD then
@@ -95,7 +94,6 @@ end
 function MusicianMIDI.GetCommands()
 	local commands = MusicianGetCommands()
 
-	local liveIndex, index, command
 	for index, command in pairs(commands) do
 		if command.text == Musician.Msg.COMMAND_LIVE_KEYBOARD then
 			table.insert(commands, index + 1, {

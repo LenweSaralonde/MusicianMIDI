@@ -108,15 +108,14 @@ local function initLayerControls(layer)
 		MSA_DropDownMenu_SetText(transposeSelector, transposeValues[index])
 	end
 
-	transposeSelector.OnClick = function(self, arg1, arg2, checked)
+	transposeSelector.OnClick = function(self, arg1)
 		transposeSelector.SetIndex(arg1)
 	end
 
-	transposeSelector.GetItems = function(frame, level, menuList)
+	transposeSelector.GetItems = function()
 		local info = MSA_DropDownMenu_CreateInfo()
 		info.func = transposeSelector.OnClick
 
-		local index, label
 		for index, label in pairs(transposeValues) do
 			info.text = label
 			info.arg1 = index
@@ -161,8 +160,6 @@ end
 --- Init live mode button
 --
 local function initLiveModeButton()
-	local button = MusicianMIDIKeyboardLiveModeButton
-
 	MusicianMIDIKeyboardLiveModeButton:SetScript("OnClick", function()
 		Musician.Live.EnableLive(not(Musician.Live.IsLiveEnabled()))
 		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
@@ -338,7 +335,7 @@ local function initPianoKeyboard()
 	frame.pianoKeyButtons = {}
 
 	-- Create key buttons
-	for keyValue, key in pairs(MusicianMIDI.KEY_BINDINGS) do
+	for _, key in pairs(MusicianMIDI.KEY_BINDINGS) do
 		local button = CreateFrame('Button', nil, container, 'MusicianMIDIPianoKey')
 		button.key = key
 		button.volumeMeter = Musician.VolumeMeter.create()
@@ -543,7 +540,6 @@ function MusicianMIDI.Keyboard.SetVirtualKeyDown(noteKey, down)
 	if not(button) then return end
 
 	button.down = down
-	local octaveKey = button.key % 12
 
 	local sliceLeft, sliceRight
 	if button.isBlack then

@@ -1,5 +1,4 @@
 MusicianMIDI.LocaleBase = {}
-local msg = MusicianMIDI.LocaleBase
 
 if Musician.LocalizationTeam then
 	tAppendAll(Musician.LocalizationTeam, {
