@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.3.6
+------
+* Minor bugfixes and improvements.
+
 v1.3.5
 ------
 * Added support for Wrath of the Lich King Classic.
