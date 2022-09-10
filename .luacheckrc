@@ -74,6 +74,7 @@ stds.wow = {
 		"PlaySound",
 		"IsInGroup",
 		"IsMouseButtonDown",
+		"IsModifierKeyDown",
 		"GameTooltip_SetTitle",
 
 		-- Global Mixins and UI Objects
