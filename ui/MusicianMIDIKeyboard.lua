@@ -336,7 +336,7 @@ local function initPianoKeyboard()
 
 	-- Create key buttons
 	for _, key in pairs(MusicianMIDI.KEY_BINDINGS) do
-		local button = CreateFrame('Button', nil, container, 'MusicianMIDIPianoKey')
+		local button = CreateFrame('Button', nil, container, 'MusicianMIDIPianoKeyTemplate')
 		button.key = key
 		button.volumeMeter = Musician.VolumeMeter.create()
 		frame.pianoKeyButtons[key] = button
@@ -356,6 +356,77 @@ end
 --- Initialize MIDI keyboard
 --
 function MusicianMIDI.Keyboard.Init()
+	-- Set title
+	MusicianMIDIKeyboardTitle:SetText(MusicianMIDI.Msg.MIDI_KEYBOARD_TITLE)
+
+	-- Upper instrument selector
+	MusicianMIDIKeyboard.upperLabel:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.UPPER])
+	MSA_DropDownMenu_SetWidth(MusicianMIDIKeyboardUpperInstrument, 165)
+
+	-- Lower instrument selector
+	MusicianMIDIKeyboard.lowerLabel:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.LOWER])
+	MSA_DropDownMenu_SetWidth(MusicianMIDIKeyboardLowerInstrument, 165)
+
+	-- Upper transpose selector
+	MSA_DropDownMenu_SetWidth(MusicianMIDIKeyboardUpperTranspose, 40)
+
+	-- Lower transpose selector
+	MSA_DropDownMenu_SetWidth(MusicianMIDIKeyboardLowerTranspose, 40)
+
+	-- Live play button
+	MusicianMIDIKeyboardLiveModeButton:SetText(Musician.Msg.LIVE_MODE)
+	MusicianMIDIKeyboardLiveModeButton.led:SetVertexColor(.33, 1, 0, 1)
+
+	-- Band sync play button
+	MusicianMIDIKeyboardBandSyncButton.count:SetPoint("CENTER", MusicianMIDIKeyboardBandSyncButton, "TOPRIGHT", -4, -4)
+	MusicianMIDIKeyboardBandSyncButton.tooltipText = Musician.Msg.LIVE_SYNC
+	MusicianMIDIKeyboardBandSyncButton:HookScript("OnClick", function()
+		Musician.Live.ToggleBandSyncMode()
+	end)
+
+	-- Split button
+	MusicianMIDIKeyboardSplitButton:SetText(MusicianMIDI.Msg.SPLIT_KEYBOARD)
+	MusicianMIDIKeyboardSplitButton.led:SetVertexColor(.33, 1, 0, 1)
+	MusicianMIDIKeyboardSplitButton.SetChecked = function(self, checked)
+		self.checked = checked
+		if checked then
+			self.led:SetAlpha(1)
+		else
+			self.led:SetAlpha(0)
+		end
+	end
+	MusicianMIDIKeyboardSplitButton.GetChecked = function(self)
+		return self.checked
+	end
+	MusicianMIDIKeyboardSplitButton:HookScript("OnClick", function(self)
+		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+		local isSplit = not(MusicianMIDI.Keyboard.IsSplit())
+		MusicianMIDI.Keyboard.SetSplit(isSplit)
+		self:SetChecked(isSplit)
+	end)
+
+	-- Split point edit box
+	MusicianMIDIKeyboardSplitKeyEditBox:SetScript("OnEscapePressed", function(self)
+		self:ClearFocus()
+	end)
+	MusicianMIDIKeyboardSplitKeyEditBox:SetScript("OnEditFocusGained", function(self)
+		self.isSettingSplitPoint = true
+		self:HighlightText(0)
+		GameTooltip:SetOwner(self, "ANCHOR_TOP")
+		GameTooltip_SetTitle(GameTooltip, MusicianMIDI.Msg.SET_SPLIT_KEY_HINT)
+	end)
+	MusicianMIDIKeyboardSplitKeyEditBox:SetScript("OnEditFocusLost", function(self)
+		C_Timer.After(0, function() self.isSettingSplitPoint = false end)
+		GameTooltip:Hide()
+		self:SetText(Musician.Sampler.NoteName(MusicianMIDI.Keyboard.GetSplitKey()))
+		self:HighlightText(0, 0)
+	end)
+	MusicianMIDIKeyboardSplitKeyEditBox:SetScript("OnKeyDown", function(self, key)
+		self.isSettingSplitPoint = false
+		MusicianMIDI.Keyboard.SetSplitKeyFromKeyboard(key)
+		self:ClearFocus()
+	end)
+
 	-- Init virtual piano keyboard
 	initPianoKeyboard()
 
@@ -693,4 +764,19 @@ function MusicianMIDI.Keyboard.SetSustain(value)
 		Musician.Live.SetSustain(value, LAYER.UPPER)
 		Musician.Live.SetSustain(value, LAYER.LOWER)
 	end
+end
+
+-- Widget templates
+--
+
+--- Piano key template OnLoad
+--
+function MusicianMIDIPianoKeyTemplate_OnLoad(self)
+	self.key = 0
+	self.isFirst = false
+	self.isLast = true
+	self.down = false
+	self:SetScript("OnShow", function()
+		MusicianMIDI.Keyboard.SetVirtualKeyDown(self, self.down)
+	end)
 end

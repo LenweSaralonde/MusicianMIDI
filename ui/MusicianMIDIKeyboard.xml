@@ -1,8 +1,10 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 
+	<Script file="MusicianMIDIKeyboard.lua" />
+
 	<!-- Piano key template -->
 
-	<Button name="MusicianMIDIPianoKey" virtual="true">
+	<Button name="MusicianMIDIPianoKeyTemplate" virtual="true">
 		<Size x="16" y="80"/>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -41,15 +43,7 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad>
-				self.key = 0
-				self.isFirst = false
-				self.isLast = true
-				self.down = false
-			</OnLoad>
-			<OnShow>
-				MusicianMIDI.Keyboard.SetVirtualKeyDown(self, self.down)
-			</OnShow>
+			<OnLoad function="MusicianMIDIPianoKeyTemplate_OnLoad" />
 		</Scripts>
 		<HighlightTexture parentKey="highlight" inherits="UIPanelButtonHighlightTexture">
 			<Anchors>
@@ -94,29 +88,19 @@
 
 			<!-- Upper instrument selector -->
 
-			<Frame name="$parentUpperInstrument" inherits="MusicianInstrumentDropdownTemplate">
+			<Frame name="$parentUpperInstrument" parentKey="upperInstrumentDropdown" inherits="MusicianInstrumentDropdownTemplate">
 				<Anchors>
 					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentPianoKeys" />
 					<Anchor point="RIGHT" x="-5" />
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="prepend">
-						MSA_DropDownMenu_SetWidth(self, 165)
-					</OnLoad>
-				</Scripts>
 			</Frame>
 
 			<!-- Upper transpose selector -->
 
-			<Frame name="$parentUpperTranspose" inherits="MusicianDropDownMenuTooltipTemplate">
+			<Frame name="$parentUpperTranspose" parentKey="upperTransposeDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
 				<Anchors>
 					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentUpperInstrument" x="32" />
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="prepend">
-						MSA_DropDownMenu_SetWidth(self, 40)
-					</OnLoad>
-				</Scripts>
 			</Frame>
 
 			<!-- Lower transpose selector -->
@@ -126,11 +110,6 @@
 					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentPianoKeys" />
 					<Anchor point="LEFT" x="5" />
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="prepend">
-						MSA_DropDownMenu_SetWidth(self, 40)
-					</OnLoad>
-				</Scripts>
 			</Frame>
 
 			<!-- Lower instrument selector -->
@@ -139,11 +118,6 @@
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentLowerTranspose" x="-32" />
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="prepend">
-						MSA_DropDownMenu_SetWidth(self, 165)
-					</OnLoad>
-				</Scripts>
 			</Frame>
 
 			<!-- Live play button -->
@@ -153,12 +127,6 @@
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="-20" y="-20" />
 				</Anchors>
-				<Scripts>
-					<OnLoad inherit="append">
-						self:SetText(Musician.Msg.LIVE_MODE)
-						self.led:SetVertexColor(.33, 1, 0, 1)
-					</OnLoad>
-				</Scripts>
 			</Button>
 
 			<!-- Band sync play button -->
@@ -168,15 +136,6 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" x="20" y="-20" />
 				</Anchors>
-				<Scripts>
-					<OnClick inherit="append">
-						Musician.Live.ToggleBandSyncMode()
-					</OnClick>
-					<OnLoad inherit="append">
-						self.count:SetPoint("CENTER", self, "TOPRIGHT", -4, -4)
-						self.tooltipText = Musician.Msg.LIVE_SYNC
-					</OnLoad>
-				</Scripts>
 			</Button>
 
 		</Frames>
@@ -216,31 +175,6 @@
 				<NormalFont style="MusicianFontIconsNormal" />
 				<HighlightFont style="MusicianFontIconsHighlight" />
 				<DisabledFont style="MusicianFontIconsDisable" />
-				<Scripts>
-					<OnLoad inherit="append">
-						self.SetChecked = function(self, checked)
-							self.checked = checked
-							if checked then
-								self.led:SetAlpha(1)
-							else
-								self.led:SetAlpha(0)
-							end
-						end
-
-						self.GetChecked = function(self, checked)
-							return self.checked
-						end
-
-						self:SetText(MusicianMIDI.Msg.SPLIT_KEYBOARD)
-						self.led:SetVertexColor(.33, 1, 0, 1)
-					</OnLoad>
-					<OnClick inherit="append">
-						PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
-						local isSplit = not(MusicianMIDI.Keyboard.IsSplit())
-						MusicianMIDI.Keyboard.SetSplit(isSplit)
-						self:SetChecked(isSplit)
-					</OnClick>
-				</Scripts>
 			</Button>
 
 			<!-- Split point edit box -->
@@ -251,36 +185,7 @@
 					<Anchor point="BOTTOM" y="7" x="2" relativePoint="TOP" relativeTo="$parentPianoKeys" />
 				</Anchors>
 				<FontString inherits="GameFontHighlightSmall" justifyH="CENTER" justifyV="MIDDLE" />
-				<Scripts>
-					<OnEscapePressed>self:ClearFocus()</OnEscapePressed>
-					<OnEditFocusGained>
-						self.isSettingSplitPoint = true
-						self:HighlightText(0)
-						GameTooltip:SetOwner(self, "ANCHOR_TOP")
-						GameTooltip_SetTitle(GameTooltip, MusicianMIDI.Msg.SET_SPLIT_KEY_HINT)
-					</OnEditFocusGained>
-					<OnEditFocusLost>
-						C_Timer.After(0, function() self.isSettingSplitPoint = false end)
-						GameTooltip:Hide()
-						self:SetText(Musician.Sampler.NoteName(MusicianMIDI.Keyboard.GetSplitKey()))
-						self:HighlightText(0, 0)
-					</OnEditFocusLost>
-					<OnKeyDown>
-						self.isSettingSplitPoint = false
-						MusicianMIDI.Keyboard.SetSplitKeyFromKeyboard(key)
-						self:ClearFocus()
-					</OnKeyDown>
-				</Scripts>
 			</EditBox>
-
 		</Frames>
-
-		<Scripts>
-			<OnLoad inherit="prepend">
-				self.upperLabel:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.UPPER])
-				self.lowerLabel:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.LOWER])
-				MusicianMIDIKeyboardTitle:SetText(MusicianMIDI.Msg.MIDI_KEYBOARD_TITLE)
-			</OnLoad>
-		</Scripts>
 	</Frame>
 </Ui>

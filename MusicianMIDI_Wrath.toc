@@ -14,5 +14,4 @@ constants\MusicianMIDI.Constants.lua
 
 locale\locale.xml
 
-ui\MusicianMIDIKeyboard.lua
 ui\MusicianMIDIKeyboard.xml

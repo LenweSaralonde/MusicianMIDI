@@ -38,6 +38,7 @@ read_globals = {
 	"MSA_DropDownMenu_Initialize",
 	"MSA_DropDownMenu_EnableDropDown",
 	"MSA_DropDownMenu_DisableDropDown",
+	"MSA_DropDownMenu_SetWidth",
 
 	-- 3rd party add-ons
 };
@@ -60,6 +61,12 @@ stds.wow = {
 		"wipe",
 
 		-- Global Functions
+		C_Timer = {
+			fields = {
+				"After",
+			}
+		},
+
 		"hooksecurefunc",
 		"CreateFrame",
 		"GetAddOnMetadata",
@@ -67,8 +74,16 @@ stds.wow = {
 		"PlaySound",
 		"IsInGroup",
 		"IsMouseButtonDown",
+		"GameTooltip_SetTitle",
 
 		-- Global Mixins and UI Objects
+		GameTooltip = {
+			fields = {
+				"SetOwner",
+				"Hide"
+			}
+		},
+
 		"GameFontHighlight",
 		"GameFontDisable",
 
