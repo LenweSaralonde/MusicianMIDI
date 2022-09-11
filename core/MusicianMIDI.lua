@@ -15,11 +15,11 @@ function MusicianMIDI:OnEnable()
 	_G.BINDING_NAME_MUSICIANMIDITOGGLE = MusicianMIDI.Msg.COMMAND_LIVE_KEYBOARD
 
 	-- Incompatible Musician version
-	local hasMissingFunction = Musician.Live.SetSustain == nil
-		or Musician.Sampler.IsInstrumentPlucked == nil
-		or MusicianMIDIKeyboard.Toggle == nil
-	if hasMissingFunction or Musician.Utils.VersionCompare(GetAddOnMetadata("Musician", "Version"), '1.6.0.5') < 0 then
-		Musician.Utils.Error(MusicianMIDI.Msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION)
+	if MusicianMIDI.MUSICIAN_API_VERSION > (Musician.API_VERSION or 0) then
+		Musician.Utils.Error(MusicianMIDI.Msg.ERROR_MUSICIAN_VERSION_TOO_OLD)
+		return
+	elseif MusicianMIDI.MUSICIAN_API_VERSION < Musician.API_VERSION then
+		Musician.Utils.Error(MusicianMIDI.Msg.ERROR_MUSICIAN_MIDI_VERSION_TOO_OLD)
 		return
 	end
 

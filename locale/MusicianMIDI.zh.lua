@@ -25,4 +25,5 @@ msg.INSTRUMENT_OCTAVE = "八度移调"
 msg.SPLIT_KEYBOARD = "分割"
 msg.SET_SPLIT_KEY_HINT = "按MIDI键盘左半部分的第一个键。"
 
-msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION = "你的Musician版本太旧以致不能使用Musician MIDI，请升级。"
+msg.ERROR_MUSICIAN_VERSION_TOO_OLD = "你的Musician版本太旧以致不能使用Musician MIDI，请升级。"
+msg.ERROR_MUSICIAN_MIDI_VERSION_TOO_OLD = "您的 Musician MIDI 版本太旧。 请更新它。"

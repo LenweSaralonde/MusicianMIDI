@@ -25,4 +25,5 @@ msg.INSTRUMENT_OCTAVE = "Ottava"
 msg.SPLIT_KEYBOARD = "Diviso"
 msg.SET_SPLIT_KEY_HINT = "Premere il primo tasto della sezione superiore sulla tastiera del pianoforte MIDI."
 
-msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION = "La tua versione di Musician è troppo vecchia per Musician MIDI. Per favore aggiornalo."
+msg.ERROR_MUSICIAN_VERSION_TOO_OLD = "La tua versione di Musician è troppo vecchia per Musician MIDI. Per favore aggiornalo."
+msg.ERROR_MUSICIAN_MIDI_VERSION_TOO_OLD = "La tua versione di Musician MIDI è troppo vecchia. Si prega di aggiornarlo."

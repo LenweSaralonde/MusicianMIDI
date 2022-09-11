@@ -1,3 +1,5 @@
+MusicianMIDI.MUSICIAN_API_VERSION = 25
+
 MusicianMIDI.KEYS = {
 	'ENTER',
 	'DELETE',

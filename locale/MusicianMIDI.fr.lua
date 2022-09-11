@@ -25,4 +25,5 @@ msg.INSTRUMENT_OCTAVE = "Octave"
 msg.SPLIT_KEYBOARD = "Diviser"
 msg.SET_SPLIT_KEY_HINT = "Appuyez sur la touche correspondant à la première note de la section supérieure sur votre clavier MIDI."
 
-msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION = "Votre version de Musician est trop ancienne pour Musician MIDI. Veuillez mettre à jour."
+msg.ERROR_MUSICIAN_VERSION_TOO_OLD = "Votre version de Musician est trop ancienne pour Musician MIDI. Veuillez mettre à jour."
+msg.ERROR_MUSICIAN_MIDI_VERSION_TOO_OLD = "Votre version de Musician MIDI est trop ancienne. Veuillez mettre à jour."

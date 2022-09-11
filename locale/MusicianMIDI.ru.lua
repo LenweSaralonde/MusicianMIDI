@@ -25,4 +25,5 @@ msg.INSTRUMENT_OCTAVE = "Октава"
 msg.SPLIT_KEYBOARD = "Расколоть"
 msg.SET_SPLIT_KEY_HINT = "Нажмите первую клавишу в верхней части клавиатуры пианино MIDI."
 
-msg.ERROR_INCOMPATIBLE_MUSICIAN_VERSION = "Ваша версия Musician слишком устарела для Musician MIDI. Пожалуйста, обновите его."
+msg.ERROR_MUSICIAN_VERSION_TOO_OLD = "Ваша версия Musician слишком устарела для Musician MIDI. Пожалуйста, обновите его."
+msg.ERROR_MUSICIAN_MIDI_VERSION_TOO_OLD = "Ваша версия Musician MIDI устарела. Пожалуйста, обновите его."
