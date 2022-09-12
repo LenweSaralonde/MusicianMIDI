@@ -1,5 +1,7 @@
 <Bindings>
 	<Binding name="MUSICIANMIDITOGGLE" category="ADDONS">
-		MusicianMIDIKeyboard:Toggle()
+		if MusicianMIDI.IsInitialized() then
+			MusicianMIDIKeyboard:Toggle()
+		end
 	</Binding>
 </Bindings>

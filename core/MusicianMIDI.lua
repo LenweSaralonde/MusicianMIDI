@@ -3,6 +3,8 @@ MusicianMIDI = LibStub("AceAddon-3.0"):NewAddon("MusicianMIDI", "AceEvent-3.0")
 local MODULE_NAME = "MIDI"
 Musician.AddModule(MODULE_NAME)
 
+local isInitialized = false
+
 local MusicianGetCommands
 local MusicianButtonGetMenu
 
@@ -31,6 +33,15 @@ function MusicianMIDI:OnEnable()
 	MusicianButton.GetMenu = MusicianMIDI.GetMenu
 	MusicianGetCommands = Musician.GetCommands
 	Musician.GetCommands = MusicianMIDI.GetCommands
+
+	-- Initialization complete
+	isInitialized = true
+end
+
+--- Indicates if the plugin is properly initialized
+-- @return isInitialized (table)
+function MusicianMIDI.IsInitialized()
+	return isInitialized
 end
 
 --- Initialize a locale and returns the initialized message table
