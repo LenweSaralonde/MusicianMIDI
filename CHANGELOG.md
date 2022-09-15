@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.3.7
+------
+* Rearranged UI code to improve maintainability.
+* Added WoW 10.0 support.
+* Fixed modifier keys use along with the keyboard.
+
 v1.3.6
 ------
 * Minor bugfixes and improvements.
