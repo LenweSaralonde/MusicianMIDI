@@ -426,6 +426,14 @@ function MusicianMIDI.Keyboard.Init()
 	initLayerControls(LAYER.UPPER)
 	initLayerControls(LAYER.LOWER)
 	MusicianMIDI.Keyboard.SetSplit(false)
+
+	-- Stop all notes and remove sustain when closing the window
+	MusicianMIDIKeyboard:HookScript("OnHide", function()
+		MusicianMIDI.Keyboard.ResetAllKeys()
+		Musician.Live.SetSustain(false, Musician.KEYBOARD_LAYER.LOWER)
+		Musician.Live.SetSustain(false, Musician.KEYBOARD_LAYER.UPPER)
+		Musician.Live.AllNotesOff()
+	end)
 end
 
 --- OnPhysicalKeyDown
@@ -545,6 +553,21 @@ function MusicianMIDI.Keyboard.OnVirtualKeyUpdate(button, elapsed)
 	button.volumeMeter:AddElapsed(elapsed)
 	button.glowLeft:SetAlpha(button.volumeMeter:GetLevel())
 	button.glowRight:SetAlpha(button.volumeMeter:GetLevel())
+end
+
+--- Reset all the keyboard keys
+--
+function MusicianMIDI.Keyboard.ResetAllKeys()
+	currentMouseKey = nil
+	wipe(keyboardKeysDown)
+	wipe(mouseKeysDown)
+	for _, button in pairs(MusicianMIDIKeyboard.pianoKeyButtons) do
+		MusicianMIDI.Keyboard.SetVirtualKeyDown(button.key, false)
+		-- Reset volume meter glow
+		button.volumeMeter:Reset()
+		button.glowLeft:SetAlpha(0)
+		button.glowRight:SetAlpha(0)
+	end
 end
 
 --- Set note event
