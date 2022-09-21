@@ -80,7 +80,7 @@ local function initLayerControls(layer)
 
 	-- Transpose selector
 	local transposeSelector = _G[varNamePrefix .. "Transpose"]
-	local transposeValues = {"+3", "+2", "+1", "0", "-1", "-2", "-3"}
+	local transposeValues = { "+3", "+2", "+1", "0", "-1", "-2", "-3" }
 	transposeSelector.tooltipText = MusicianMIDI.Msg.INSTRUMENT_OCTAVE
 
 	transposeSelector.SetValue = function(value)
@@ -135,7 +135,7 @@ local function updateLiveModeButton()
 		MusicianKeyboardTitleIcon:SetText(ICON.SOLO_MODE)
 	end
 
-	if not(Musician.Live.CanStream()) then
+	if not Musician.Live.CanStream() then
 		button:Disable()
 		button.tooltipText = Musician.Msg.LIVE_MODE_DISABLED
 	else
@@ -147,7 +147,7 @@ end
 --
 local function initLiveModeButton()
 	MusicianMIDIKeyboardLiveModeButton:SetScript("OnClick", function()
-		Musician.Live.EnableLive(not(Musician.Live.IsLiveEnabled()))
+		Musician.Live.EnableLive(not Musician.Live.IsLiveEnabled())
 		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 	end)
 
@@ -202,7 +202,7 @@ function refreshPianoKeyboardLayout()
 			to = to and max(to, key) or key
 			local octaveKey = key % 12
 			-- Not a black key
-			if not(octaveKey == 1 or octaveKey == 3 or octaveKey == 6 or octaveKey == 8 or octaveKey == 10) then
+			if not (octaveKey == 1 or octaveKey == 3 or octaveKey == 6 or octaveKey == 8 or octaveKey == 10) then
 				whites = whites + 1
 			end
 		end
@@ -232,8 +232,10 @@ function refreshPianoKeyboardLayout()
 			button.isFirst = key == from
 			button.isLast = key == to
 			button.isBlack = octaveKey == 1 or octaveKey == 3 or octaveKey == 6 or octaveKey == 8 or octaveKey == 10
-			button.hasBlackLeft = not(button.isFirst) and (octaveKey == 2 or octaveKey == 4 or octaveKey == 7 or octaveKey == 9 or octaveKey == 11)
-			button.hasBlackRight = not(button.isLast) and (octaveKey == 0 or octaveKey == 2 or octaveKey == 5 or octaveKey == 7 or octaveKey == 9)
+			button.hasBlackLeft = not button.isFirst and
+				(octaveKey == 2 or octaveKey == 4 or octaveKey == 7 or octaveKey == 9 or octaveKey == 11)
+			button.hasBlackRight = not button.isLast and
+				(octaveKey == 0 or octaveKey == 2 or octaveKey == 5 or octaveKey == 7 or octaveKey == 9)
 
 			local glowSliceLeft, glowSliceRight
 
@@ -261,7 +263,8 @@ function refreshPianoKeyboardLayout()
 
 				-- Set glow texture slices
 				glowSliceLeft = button.hasBlackLeft and KEY_TEXTURE_SLICES.WhiteGlowBlackLeft or KEY_TEXTURE_SLICES.WhiteGlowFullLeft
-				glowSliceRight = button.hasBlackRight and KEY_TEXTURE_SLICES.WhiteGlowBlackRight or KEY_TEXTURE_SLICES.WhiteGlowFullRight
+				glowSliceRight = button.hasBlackRight and KEY_TEXTURE_SLICES.WhiteGlowBlackRight or
+					KEY_TEXTURE_SLICES.WhiteGlowFullRight
 			end
 
 			-- Set black keys on top of the white ones
@@ -386,7 +389,7 @@ function MusicianMIDI.Keyboard.Init()
 	end
 	MusicianMIDIKeyboardSplitButton:HookScript("OnClick", function(self)
 		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
-		local isSplit = not(MusicianMIDI.Keyboard.IsSplit())
+		local isSplit = not MusicianMIDI.Keyboard.IsSplit()
 		MusicianMIDI.Keyboard.SetSplit(isSplit)
 		self:SetChecked(isSplit)
 	end)
@@ -456,7 +459,7 @@ end
 function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 
 	-- Only process key if there is no active modifier
-	if not(IsModifierKeyDown()) then
+	if not IsModifierKeyDown() then
 		-- Sustain (pedal)
 		if keyValue == 'SPACE' then
 			MusicianMIDI.Keyboard.SetSustain(down)
@@ -481,10 +484,10 @@ end
 -- @param noteKey (int) MIDI key number
 -- @param down (boolean)
 function MusicianMIDI.Keyboard.OnKeyboardKey(noteKey, down)
-	local wasDown = keyboardKeysDown[noteKey] and not(mouseKeysDown[noteKey])
-	local wasUp = not(keyboardKeysDown[noteKey]) and not(mouseKeysDown[noteKey])
+	local wasDown = keyboardKeysDown[noteKey] and not mouseKeysDown[noteKey]
+	local wasUp = not keyboardKeysDown[noteKey] and not mouseKeysDown[noteKey]
 	keyboardKeysDown[noteKey] = down and true or nil
-	if not(down) and wasDown or down and wasUp then
+	if not down and wasDown or down and wasUp then
 		MusicianMIDI.Keyboard.SetNote(noteKey, down)
 		MusicianMIDI.Keyboard.SetVirtualKeyDown(noteKey, down)
 	end
@@ -494,10 +497,10 @@ end
 -- @param noteKey (int) MIDI key number
 -- @param down (boolean)
 function MusicianMIDI.Keyboard.OnVirtualKey(noteKey, down)
-	local wasDown = not(keyboardKeysDown[noteKey]) and mouseKeysDown[noteKey]
-	local wasUp = not(keyboardKeysDown[noteKey]) and not(mouseKeysDown[noteKey])
+	local wasDown = not keyboardKeysDown[noteKey] and mouseKeysDown[noteKey]
+	local wasUp = not keyboardKeysDown[noteKey] and not mouseKeysDown[noteKey]
 	mouseKeysDown[noteKey] = down and true or nil
-	if not(down) and wasDown or down and wasUp then
+	if not down and wasDown or down and wasUp then
 		local splitKeyEditBox = MusicianMIDIKeyboard.splitKeyEditBox
 		-- Setting split point using the virtual keyboard
 		if down and splitKeyEditBox.isSettingSplitPoint then
@@ -523,7 +526,7 @@ end
 --- Virtual keyboard button mouse up handler
 --
 function MusicianMIDI.Keyboard.OnVirtualKeyMouseUp()
-	if currentMouseKey and not(IsMouseButtonDown()) then
+	if currentMouseKey and not IsMouseButtonDown() then
 		MusicianMIDI.Keyboard.OnVirtualKey(currentMouseKey, false)
 	end
 end
@@ -599,7 +602,7 @@ function MusicianMIDI.Keyboard.SetVirtualKeyDown(noteKey, down)
 
 	local button = MusicianMIDIKeyboard.pianoKeyButtons[noteKey]
 
-	if not(button) then return end
+	if not button then return end
 
 	button.down = down
 
@@ -702,7 +705,7 @@ function MusicianMIDI.Keyboard.OnLiveNoteOn(event, key, layer, instrumentData, i
 
 	local button = MusicianMIDIKeyboard.pianoKeyButtons[keyboardKey]
 
-	if not(button) then
+	if not button then
 		return
 	end
 
@@ -726,7 +729,7 @@ function MusicianMIDI.Keyboard.OnLiveNoteOff(event, key, layer, isChordNote, sou
 
 	local button = MusicianMIDIKeyboard.pianoKeyButtons[key]
 
-	if not(button) then
+	if not button then
 		return
 	end
 
@@ -737,7 +740,7 @@ end
 -- @param value (boolean)
 function MusicianMIDI.Keyboard.SetSustain(value)
 	-- Always sustain upper only if not in split mode
-	if not(MusicianMIDI.Keyboard.IsSplit()) then
+	if not MusicianMIDI.Keyboard.IsSplit() then
 		Musician.Live.SetSustain(value, LAYER.UPPER)
 		return
 	end

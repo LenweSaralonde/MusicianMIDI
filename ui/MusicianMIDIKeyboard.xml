@@ -1,21 +1,23 @@
-<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.blizzard.com/wow/ui/">
 
 	<Script file="MusicianMIDIKeyboard.lua" />
 
 	<!-- Piano key template -->
 
 	<Button name="MusicianMIDIPianoKeyTemplate" virtual="true">
-		<Size x="16" y="80"/>
+		<Size x="16" y="80" />
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture parentKey="textureLeft" file="Interface\AddOns\MusicianMIDI\ui\textures\piano-keys" setAllPoints="true">
-					<Size x="8" y="80"/>
+					<Size x="8" y="80" />
 					<Anchors>
 						<Anchor point="LEFT" />
 					</Anchors>
 				</Texture>
 				<Texture parentKey="textureRight" file="Interface\AddOns\MusicianMIDI\ui\textures\piano-keys" setAllPoints="true">
-					<Size x="8" y="80"/>
+					<Size x="8" y="80" />
 					<Anchors>
 						<Anchor point="RIGHT" />
 					</Anchors>
@@ -27,14 +29,14 @@
 					<Color a="1" r="0" g="1" b="0" />
 				</Texture>
 				<Texture parentKey="glowLeft" alpha="0" alphamode="BLEND" file="Interface\AddOns\MusicianMIDI\ui\textures\piano-keys">
-					<Size x="16" y="96"/>
+					<Size x="16" y="96" />
 					<Anchors>
 						<Anchor point="RIGHT" relativePoint="CENTER" />
 					</Anchors>
 					<Color a="1" r=".992" g=".968" b=".854" />
 				</Texture>
 				<Texture parentKey="glowRight" alpha="0" alphamode="BLEND" file="Interface\AddOns\MusicianMIDI\ui\textures\piano-keys">
-					<Size x="16" y="96"/>
+					<Size x="16" y="96" />
 					<Anchors>
 						<Anchor point="LEFT" relativePoint="CENTER" />
 					</Anchors>
@@ -180,7 +182,7 @@
 			<!-- Split point edit box -->
 
 			<EditBox name="$parentSplitKeyEditBox" parentKey="splitKeyEditBox" inherits="InputBoxTemplate" letters="3" historyLines="0" autofocus="false">
-				<Size x="40" y="22"/>
+				<Size x="40" y="22" />
 				<Anchors>
 					<Anchor point="BOTTOM" y="7" x="2" relativePoint="TOP" relativeTo="$parentPianoKeys" />
 				</Anchors>
