@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.3.9
+------
+* Code cleanup.
+
 v1.3.8
 ------
 * Fixed held notes not being stopped when closing the MIDI keyboard.
