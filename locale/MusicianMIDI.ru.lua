@@ -22,7 +22,7 @@ msg.MIDI_KEYBOARD_TITLE = "MIDI клавиатура"
 msg.SELECT_INSTRUMENT = "Выбрать инструмент"
 msg.INSTRUMENT_OCTAVE = "Октава"
 
-msg.SPLIT_KEYBOARD = "Расколоть"
+msg.SPLIT_KEYBOARD = "Split"
 msg.SET_SPLIT_KEY_HINT = "Нажмите первую клавишу в верхней части клавиатуры пианино MIDI."
 
 msg.ERROR_MUSICIAN_VERSION_TOO_OLD = "Ваша версия Musician слишком устарела для Musician MIDI. Пожалуйста, обновите его."
