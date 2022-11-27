@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.3.12
+-------
+* Fixed translations not fitting in some UI elements.
+
 v1.3.11
 -------
 * TOC bump for WoW patch 10.0.2.
