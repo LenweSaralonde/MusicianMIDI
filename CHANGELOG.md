@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.3.15
+-------
+* TOC bump for WoW patch 10.0.7.
+
 v1.3.14
 -------
 * Updated for the new Musician API.
