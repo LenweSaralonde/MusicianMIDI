@@ -124,8 +124,7 @@
 
 			<!-- Live play button -->
 
-			<Button name="$parentLiveModeButton" inherits="MusicianLEDTextButtonTemplate">
-				<Size x="105" y="24" />
+			<Button name="$parentLiveModeButton" inherits="MusicianLiveModeButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="-20" y="-20" />
 				</Anchors>
@@ -133,8 +132,7 @@
 
 			<!-- Band sync play button -->
 
-			<Button name="$parentBandSyncButton" inherits="MusicianBandPlayButtonTemplate">
-				<Size x="60" y="24" />
+			<Button name="$parentBandSyncButton" inherits="MusicianBandLivePlayButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="20" y="-20" />
 				</Anchors>

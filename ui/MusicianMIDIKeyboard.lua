@@ -13,11 +13,6 @@ local LayerNames = {
 	[LAYER.LOWER] = "Lower",
 }
 
-local ICON = {
-	["SOLO_MODE"] = Musician.Icons.Headphones,
-	["LIVE_MODE"] = Musician.Icons.Speaker
-}
-
 local KEY_TEXTURE_SLICE_WIDTH = 8 / 128
 local KEY_TEXTURE_SLICE_HEIGHT = 80 / 128
 local KEY_GLOW_TEXTURE_SLICE_WIDTH = 16 / 128
@@ -114,75 +109,9 @@ local function initLayerControls(layer)
 	transposeSelector.SetValue(transpose[layer])
 end
 
---- Update texts and icons for live and solo modes
---
-local function updateLiveModeButton()
-	local button = MusicianMIDIKeyboardLiveModeButton
-
-	if Musician.Live.IsLiveEnabled() and Musician.Live.CanStream() then
-		button.led:SetAlpha(1)
-		button.tooltipText = Musician.Msg.ENABLE_SOLO_MODE
-	else
-		button.led:SetAlpha(0)
-		button.tooltipText = Musician.Msg.ENABLE_LIVE_MODE
-	end
-
-	if Musician.Live.IsLiveEnabled() and Musician.Live.CanStream() then
-		MusicianKeyboardTitle:SetText(Musician.Msg.PLAY_LIVE)
-		MusicianKeyboardTitleIcon:SetText(ICON.LIVE_MODE)
-	else
-		MusicianKeyboardTitle:SetText(Musician.Msg.PLAY_SOLO)
-		MusicianKeyboardTitleIcon:SetText(ICON.SOLO_MODE)
-	end
-
-	if not Musician.Live.CanStream() then
-		button:Disable()
-		button.tooltipText = Musician.Msg.LIVE_MODE_DISABLED
-	else
-		button:Enable()
-	end
-end
-
---- Init live mode button
---
-local function initLiveModeButton()
-	MusicianMIDIKeyboardLiveModeButton:SetScript("OnClick", function()
-		Musician.Live.EnableLive(not Musician.Live.IsLiveEnabled())
-		PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
-	end)
-
-	MusicianMIDI.Keyboard:RegisterMessage(Musician.Events.LiveModeChange, updateLiveModeButton)
-
-	updateLiveModeButton()
-end
-
---- Update texts and icons for band play
---
-local function updateBandSyncButton()
-	local sourceButton = MusicianKeyboardBandSyncButton
-	local button = MusicianMIDIKeyboardBandSyncButton
-	local syncedPlayersCount = #Musician.Live.GetSyncedBandPlayers()
-
-	button:SetShown(IsInGroup())
-	button:SetEnabled(sourceButton:IsEnabled())
-	button:SetChecked(sourceButton.checked)
-	button.count.text:SetText(syncedPlayersCount)
-	button.count:SetShown(syncedPlayersCount > 0)
-	button:SetTooltipText(sourceButton.tooltipText)
-end
-
---- Init band sync button
---
-local function initBandSyncButton()
-	hooksecurefunc(MusicianKeyboardBandSyncButton, "SetShown", updateBandSyncButton)
-	hooksecurefunc(Musician.Keyboard, "UpdateBandSyncButton", updateBandSyncButton)
-	updateBandSyncButton()
-end
-
 --- Refresh whole piano keyboard layout
 --
 function refreshPianoKeyboardLayout()
-
 	local frame = MusicianMIDIKeyboard
 	local container = frame.pianoKeys
 	local glowFrame = frame.pianoKeysGlow
@@ -262,7 +191,8 @@ function refreshPianoKeyboardLayout()
 				button.highlight:SetPoint('TOP', 0, -10)
 
 				-- Set glow texture slices
-				glowSliceLeft = button.hasBlackLeft and KEY_TEXTURE_SLICES.WhiteGlowBlackLeft or KEY_TEXTURE_SLICES.WhiteGlowFullLeft
+				glowSliceLeft = button.hasBlackLeft and KEY_TEXTURE_SLICES.WhiteGlowBlackLeft or
+					KEY_TEXTURE_SLICES.WhiteGlowFullLeft
 				glowSliceRight = button.hasBlackRight and KEY_TEXTURE_SLICES.WhiteGlowBlackRight or
 					KEY_TEXTURE_SLICES.WhiteGlowFullRight
 			end
@@ -362,17 +292,6 @@ function MusicianMIDI.Keyboard.Init()
 	-- Lower transpose selector
 	MSA_DropDownMenu_SetWidth(MusicianMIDIKeyboardLowerTranspose, 40)
 
-	-- Live play button
-	MusicianMIDIKeyboardLiveModeButton:SetText(Musician.Msg.LIVE_MODE)
-	MusicianMIDIKeyboardLiveModeButton.led:SetVertexColor(.33, 1, 0, 1)
-
-	-- Band sync play button
-	MusicianMIDIKeyboardBandSyncButton.count:SetPoint("CENTER", MusicianMIDIKeyboardBandSyncButton, "TOPRIGHT", -4, -4)
-	MusicianMIDIKeyboardBandSyncButton.tooltipText = Musician.Msg.LIVE_SYNC
-	MusicianMIDIKeyboardBandSyncButton:HookScript("OnClick", function()
-		Musician.Live.ToggleBandSyncMode()
-	end)
-
 	-- Split button
 	MusicianMIDIKeyboardSplitButton:SetText(MusicianMIDI.Msg.SPLIT_KEYBOARD)
 	MusicianMIDIKeyboardSplitButton.led:SetVertexColor(.33, 1, 0, 1)
@@ -424,8 +343,6 @@ function MusicianMIDI.Keyboard.Init()
 	MusicianMIDIKeyboard:SetScript("OnKeyUp", MusicianMIDI.Keyboard.OnPhysicalKeyUp)
 
 	-- Init controls
-	initLiveModeButton()
-	initBandSyncButton()
 	initLayerControls(LAYER.UPPER)
 	initLayerControls(LAYER.LOWER)
 	MusicianMIDI.Keyboard.SetSplit(false)
@@ -457,7 +374,6 @@ end
 -- @param keyValue (string)
 -- @param down (boolean)
 function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
-
 	-- Only process key if there is no active modifier
 	if not IsModifierKeyDown() then
 		-- Sustain (pedal)
@@ -577,7 +493,6 @@ end
 -- @param noteKey (int) MIDI key number
 -- @param down (boolean)
 function MusicianMIDI.Keyboard.SetNote(noteKey, down)
-
 	-- Handle keyboard splitting
 	local layer = LAYER.UPPER
 	if MusicianMIDI.Keyboard.IsSplit() and noteKey < MusicianMIDI.Keyboard.GetSplitKey() then
@@ -599,7 +514,6 @@ end
 -- @param noteKey (int) MIDI key number
 -- @param down (boolean)
 function MusicianMIDI.Keyboard.SetVirtualKeyDown(noteKey, down)
-
 	local button = MusicianMIDIKeyboard.pianoKeyButtons[noteKey]
 
 	if not button then return end
@@ -612,8 +526,10 @@ function MusicianMIDI.Keyboard.SetVirtualKeyDown(noteKey, down)
 		sliceRight = down and KEY_TEXTURE_SLICES.BlackDownRight or KEY_TEXTURE_SLICES.BlackUpRight
 	else
 		if down then
-			sliceLeft = button.hasBlackLeft and KEY_TEXTURE_SLICES.WhiteDownBlackLeft or KEY_TEXTURE_SLICES.WhiteDownFullLeft
-			sliceRight = button.hasBlackRight and KEY_TEXTURE_SLICES.WhiteDownBlackRight or KEY_TEXTURE_SLICES.WhiteDownFullRight
+			sliceLeft = button.hasBlackLeft and KEY_TEXTURE_SLICES.WhiteDownBlackLeft or
+				KEY_TEXTURE_SLICES.WhiteDownFullLeft
+			sliceRight = button.hasBlackRight and KEY_TEXTURE_SLICES.WhiteDownBlackRight or
+				KEY_TEXTURE_SLICES.WhiteDownFullRight
 		else
 			sliceLeft = KEY_TEXTURE_SLICES.WhiteUpLeft
 			sliceRight = KEY_TEXTURE_SLICES.WhiteUpRight
