@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.3.16
+-------
+* Refactored live mode buttons.
+
 v1.3.15
 -------
 * TOC bump for WoW patch 10.0.7.
