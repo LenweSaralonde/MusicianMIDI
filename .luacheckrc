@@ -68,7 +68,6 @@ stds.wow = {
 
 		"hooksecurefunc",
 		"CreateFrame",
-		"GetAddOnMetadata",
 		"GetLocale",
 		"PlaySound",
 		"IsInGroup",
