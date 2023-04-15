@@ -1,3 +1,10 @@
+/**
+ * Generate presets for Bome's Midi Translator
+ *
+ * Usage:
+ * node generate-bmtp.js > "../Musician preset.bmtp"
+ */
+
 'use strict'
 
 const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -83,21 +90,44 @@ const MAPPING = [
 
 const START = 28;
 
+// BMTP header
 let bmtp =
 	`[Project]\n` +
-	`Version=1\n`;
+	`Version=1\n\n`;
 
-let c;
-for (c = 0; c < 16; c++) {
+// MIDI Thru rules for 1, 2 and 3-byte long messages
+// SysEx messages are not supported
+bmtp +=
+	`[Preset.0]\n` +
+	`Name=MIDI Thru\n` +
+	`Active=1\n` +
+	`Name0=1-byte MIDI Thru\n` +
+	`Incoming0=MID1pp\n` +
+	`Outgoing0=MID1pp\n` +
+	`Options0=Actv01Stop00OutO00\n` +
+	`Name1=2-byte MIDI Thru\n` +
+	`Incoming1=MID1ppqq\n` +
+	`Outgoing1=MID1ppqq\n` +
+	`Options1=Actv01Stop00OutO00\n` +
+	`Name2=3-byte MIDI Thru\n` +
+	`Incoming2=MID1ppqqrr\n` +
+	`Outgoing2=MID1ppqqrr\n` +
+	`Options2=Actv01Stop00OutO00\n\n`;
+
+// Create rules for each of the 16 MIDI channels
+for (let c = 0; c < 16; c++) {
+	// Channel preset header
 	bmtp +=
-		`\n[Preset.${c}]\n` +
+		`[Preset.${c + 1}]\n` +
 		`Name=Musician MIDI (channel ${c + 1})\n` +
 		`Active=1\n`;
 
-	const cHex = c.toString(16).toUpperCase();
-	let rule = 0;
-	let i;
-	for (i in MAPPING) {
+	let channelRuleIndex = 0;
+
+	const cHex = c.toString(16).toUpperCase(); // Channel number in hexadecimal
+
+	// Channel rules for each supported MIDI key
+	for (let i in MAPPING) {
 		const compKeyCode = MAPPING[i];
 		const midiKey = START + parseInt(i, 10);
 		const midiKeyCode = midiKey.toString(16).toUpperCase();
@@ -105,37 +135,46 @@ for (c = 0; c < 16; c++) {
 		const note = (midiKey - 12) % 12;
 		const midiKeyName = NOTE_NAMES[note] + octave;
 
+		// Key up (standard, note off with velocity, for Roland etc.)
 		bmtp +=
-			`Name${rule}=${midiKeyName} up\n` +
-			`Incoming${rule}=MID18${cHex}${midiKeyCode}pp\n` +
-			`Outgoing${rule}=KAM12100KSQ1000${compKeyCode}\n` +
-			`Options${rule}=Actv01Stop00OutO00\n`;
-		rule++;
+			`Name${channelRuleIndex}=${midiKeyName} up\n` +
+			`Incoming${channelRuleIndex}=MID18${cHex}${midiKeyCode}pp\n` +
+			`Outgoing${channelRuleIndex}=KAM12100KSQ1000${compKeyCode}\n` +
+			`Options${channelRuleIndex}=Actv01Stop01OutO00\n`; // Stop processing to reduce input lag
+		channelRuleIndex++;
+
+		// Key up (alternate, note on with 0 velocity, for Akai, M-Audio etc.)
 		bmtp +=
-			`Name${rule}=${midiKeyName} up (alternate)\n` +
-			`Incoming${rule}=MID19${cHex}${midiKeyCode}00\n` +
-			`Outgoing${rule}=KAM12100KSQ1000${compKeyCode}\n` +
-			`Options${rule}=Actv01Stop01OutO00\n`;
-		rule++;
+			`Name${channelRuleIndex}=${midiKeyName} up (alternate)\n` +
+			`Incoming${channelRuleIndex}=MID19${cHex}${midiKeyCode}00\n` +
+			`Outgoing${channelRuleIndex}=KAM12100KSQ1000${compKeyCode}\n` +
+			`Options${channelRuleIndex}=Actv01Stop01OutO00\n`; // Stop processing to reduce input lag
+		channelRuleIndex++;
+
+		// Key down (note on with velocity)
 		bmtp +=
-			`Name${rule}=${midiKeyName} down\n` +
-			`Incoming${rule}=MID19${cHex}${midiKeyCode}pp\n` +
-			`Outgoing${rule}=KAM11000KSQ1000${compKeyCode}\n` +
-			`Options${rule}=Actv01Stop00OutO00\n`;
-		rule++;
+			`Name${channelRuleIndex}=${midiKeyName} down\n` +
+			`Incoming${channelRuleIndex}=MID19${cHex}${midiKeyCode}pp\n` +
+			`Outgoing${channelRuleIndex}=KAM11000KSQ1000${compKeyCode}\n` +
+			`Options${channelRuleIndex}=Actv01Stop01OutO00\n`; // Stop processing to reduce input lag
+		channelRuleIndex++;
 	}
 
+	// Sustain pedal down
 	bmtp +=
-		`Name${rule}=Pedal down\n` +
-		`Incoming${rule}=MID1B${cHex}407F\n` +
-		`Outgoing${rule}=KAM11000KSQ10001020\n` +
-		`Options${rule}=Actv01Stop00OutO00\n`;
-	rule++;
+		`Name${channelRuleIndex}=Pedal down\n` +
+		`Incoming${channelRuleIndex}=MID1B${cHex}407F\n` +
+		`Outgoing${channelRuleIndex}=KAM11000KSQ10001020\n` +
+		`Options${channelRuleIndex}=Actv01Stop01OutO00\n`;
+	channelRuleIndex++;
+
+	// Sustain pedal up
 	bmtp +=
-		`Name${rule}=Pedal up\n` +
-		`Incoming${rule}=MID1B${cHex}4000\n` +
-		`Outgoing${rule}=KAM12100KSQ10001020\n` +
-		`Options${rule}=Actv01Stop00OutO00\n`;
+		`Name${channelRuleIndex}=Pedal up\n` +
+		`Incoming${channelRuleIndex}=MID1B${cHex}4000\n` +
+		`Outgoing${channelRuleIndex}=KAM12100KSQ10001020\n` +
+		`Options${channelRuleIndex}=Actv01Stop01OutO00\n\n`;
 }
 
+// Output to console
 process.stdout.write(bmtp);
