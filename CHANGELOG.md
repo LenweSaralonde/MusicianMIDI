@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.4.0
+------
+* Added MIDI Thru to the MIDI Translator presets.
+* Added detailed step-by-step instructions in the README.
+* Remade the visual piano keyboard with the correct key spacings.
+
 v1.3.16
 -------
 * Refactored live mode buttons.
