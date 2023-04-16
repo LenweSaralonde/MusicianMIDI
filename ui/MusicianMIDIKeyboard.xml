@@ -18,9 +18,9 @@
 					<Color a="1" r="0" g="1" b="0" />
 				</Texture>
 				<Texture parentKey="glow" alpha="0" alphamode="BLEND" file="Interface\AddOns\MusicianMIDI\ui\textures\piano-keys">
-					<Size x="32" y="96" />
 					<Anchors>
-						<Anchor point="CENTER" relativePoint="CENTER" />
+						<Anchor point="BOTTOMLEFT" x="-6" y="-8" />
+						<Anchor point="TOPRIGHT" x="6" y="8" />
 					</Anchors>
 					<Color a="1" r=".992" g=".968" b=".854" />
 				</Texture>

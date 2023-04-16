@@ -26,28 +26,28 @@ local KEY_TEXTURE_SLICE_WIDTH = KEY_TEXTURE_GLOW_WIDTH
 local KEY_TEXTURE_SLICE_HEIGHT = KEY_TEXTURE_GLOW_HEIGHT
 local KEY_TEXTURE_SLICE_PADDING = KEY_PADDING / 256
 local KEY_TEXTURE_SLICES = {
-	Black_Up = {0, 1},
-	Black_Down = {1, 0},
-	Black_Glow = {1, 1},
-	White_Up = {0, 0},
-	WhiteFull_Down = {2, 0},
-	WhiteFull_Glow = {2, 1},
-	WhiteCF_Down = {3, 0},
-	WhiteCF_Glow = {3, 1},
-	WhiteD_Down = {4, 0},
-	WhiteD_Glow = {4, 1},
-	WhiteEB_Down = {5, 0},
-	WhiteEB_Glow = {5, 1},
-	WhiteG_Down = {6, 0},
-	WhiteG_Glow = {6, 1},
-	WhiteA_Down = {7, 0},
-	WhiteA_Glow = {7, 1},
+	Black_Up = { 0, 1 },
+	Black_Down = { 1, 0 },
+	Black_Glow = { 1, 1 },
+	White_Up = { 0, 0 },
+	WhiteFull_Down = { 2, 0 },
+	WhiteFull_Glow = { 2, 1 },
+	WhiteCF_Down = { 3, 0 },
+	WhiteCF_Glow = { 3, 1 },
+	WhiteD_Down = { 4, 0 },
+	WhiteD_Glow = { 4, 1 },
+	WhiteEB_Down = { 5, 0 },
+	WhiteEB_Glow = { 5, 1 },
+	WhiteG_Down = { 6, 0 },
+	WhiteG_Glow = { 6, 1 },
+	WhiteA_Down = { 7, 0 },
+	WhiteA_Glow = { 7, 1 },
 }
 local KEY_X_OFFSETS = {
 	[1] = (3 - 7) / 16 / 2,
 	[3] = (7 - 3) / 16 / 2,
 	[6] = (3 - 7) / 16 / 2,
-	[10] =(7 - 3) / 16 / 2,
+	[10] = (7 - 3) / 16 / 2,
 }
 
 local transpose = {
@@ -274,17 +274,20 @@ function refreshPianoKeyboardLayout()
 
 				button.texture:ClearAllPoints()
 				button.texture:SetPoint("RIGHT", button, "CENTER")
-				button.texture:SetSize(KEY_WIDTH / 2, KEY_HEIGHT)
+				button.texture:SetPoint("TOPLEFT", button, "TOPLEFT")
+				button.texture:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT")
 
 				button.texture2 = button:CreateTexture(nil, "BACKGROUND")
 				button.texture2:SetTexture("Interface\\AddOns\\MusicianMIDI\\ui\\textures\\piano-keys")
 				button.texture2:ClearAllPoints()
 				button.texture2:SetPoint("LEFT", button, "CENTER")
-				button.texture2:SetSize(KEY_WIDTH / 2, KEY_HEIGHT)
+				button.texture2:SetPoint("TOPRIGHT", button, "TOPRIGHT")
+				button.texture2:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT")
 
 				button.glow:ClearAllPoints()
 				button.glow:SetPoint("RIGHT", button, "CENTER")
-				button.glow:SetSize(KEY_GLOW_WIDTH / 2, KEY_GLOW_HEIGHT)
+				button.glow:SetPoint("TOPLEFT", button, "TOPLEFT", -6, 8)
+				button.glow:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", -6, -8)
 
 				button.glow2 = button:CreateTexture(nil, "BACKGROUND")
 				button.glow2:SetBlendMode("BLEND")
@@ -293,7 +296,8 @@ function refreshPianoKeyboardLayout()
 				button.glow2:SetTexture("Interface\\AddOns\\MusicianMIDI\\ui\\textures\\piano-keys")
 				button.glow2:ClearAllPoints()
 				button.glow2:SetPoint("LEFT", button, "CENTER", 0, 0)
-				button.glow2:SetSize(KEY_GLOW_WIDTH / 2, KEY_GLOW_HEIGHT)
+				button.glow2:SetPoint("TOPRIGHT", button, "TOPRIGHT", 6, 8)
+				button.glow2:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 6, -8)
 
 				-- Calculate new textures coordinates
 				upRight = upLeft + KEY_TEXTURE_WIDTH / 2
