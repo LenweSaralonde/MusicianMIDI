@@ -20,11 +20,11 @@ Feel free to join our [Discord server](https://discord.gg/ypfpGxK) for further a
 - [Deal with audio delay in Microsoft Windows](#deal-with-audio-delay-in-microsoft-windows)
   - [Using a hardware synthesizer](#using-a-hardware-synthesizer)
   - [Using a software synthesizer](#using-a-software-synthesizer)
-    - [Install Sforzando](#install-sforzando)
-    - [Install FlexASIO (optional)](#install-flexasio-optional)
-	- [Configure Sforzando](#configure-sforzando)
-    - [Configure virtual MIDI cable (optional)](#configure-virtual-midi-cable-optional)
-    - [Play!](#play)
+    1. [Install Sforzando](#install-sforzando)
+    2. [Install FlexASIO (optional)](#install-flexasio-optional)
+	3. [Configure Sforzando](#configure-sforzando)
+    4. [Configure virtual MIDI cable (optional)](#configure-virtual-midi-cable-optional)
+    5. [Play!](#play)
 
 ## Software installation
 This add-on requires the external **Bome MIDI Translator** software to convert incoming MIDI messages from your controller into keystrokes that can be processed by the add-on.
