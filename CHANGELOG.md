@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.4.1
+------
+* Updated for WoW patch 10.1.
+
 v1.4.0
 ------
 * Added MIDI Thru to the MIDI Translator presets.
