@@ -102,6 +102,8 @@ This problem is more likely to occur on Microsoft Windows because WoW only suppo
 
 Mac users don't experience this problem because macOS was designed with music creation in mind.
 
+Additional audio latency may also be caused by using wireless headphones or speakers. It's recommended that you use wired ones to reduce latency.
+
 The solution is to use an external synthesizer for audio feedback, instead of relying on Musician's.
 
 ### Using a hardware synthesizer
