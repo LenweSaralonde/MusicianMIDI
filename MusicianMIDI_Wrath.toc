@@ -1,4 +1,4 @@
-## Interface: 30401
+## Interface: 30402
 ## Title: Musician MIDI
 ## Author: LenweSaralonde
 ## Notes: Perform live music in Musician using your MIDI keyboard
