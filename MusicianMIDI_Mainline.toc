@@ -2,7 +2,7 @@
 ## Title: Musician MIDI
 ## Author: LenweSaralonde
 ## Notes: Perform live music in Musician using your MIDI keyboard
-## Version: 1.4.2
+## Version: 1.4.3
 ## IconTexture: Interface\AddOns\MusicianMIDI\ui\textures\addon-list-icon.blp
 ## RequiredDeps: Musician
 ## DefaultState: Enabled
