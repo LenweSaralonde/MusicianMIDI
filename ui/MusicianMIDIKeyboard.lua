@@ -501,7 +501,7 @@ function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 		-- Sustain (pedal)
 		if keyValue == 'SPACE' then
 			MusicianMIDI.Keyboard.SetSustain(down)
-			MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
+			Musician.Utils.SetPropagateKeyboardInput(MusicianMIDIKeyboard, false)
 			return
 		end
 
@@ -509,13 +509,13 @@ function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 		local noteKey = MusicianMIDI.KEY_BINDINGS[keyValue]
 		if noteKey ~= nil then
 			MusicianMIDI.Keyboard.OnKeyboardKey(noteKey, down)
-			MusicianMIDIKeyboard:SetPropagateKeyboardInput(false)
+			Musician.Utils.SetPropagateKeyboardInput(MusicianMIDIKeyboard, false)
 			return
 		end
 	end
 
 	-- Default: propagate
-	MusicianMIDIKeyboard:SetPropagateKeyboardInput(true)
+	Musician.Utils.SetPropagateKeyboardInput(MusicianMIDIKeyboard, true)
 end
 
 --- Key up/down handler, from MIDI piano keyboard
