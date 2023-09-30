@@ -75,6 +75,8 @@ stds.wow = {
 		"IsModifierKeyDown",
 		"GameTooltip_SetTitle",
 		"GetBindingFromClick",
+		"InCombatLockdown",
+		"ToggleFrame",
 
 		-- Global Mixins and UI Objects
 		GameTooltip = {
@@ -86,6 +88,8 @@ stds.wow = {
 
 		"GameFontHighlight",
 		"GameFontDisable",
+		"UIParent",
+		"WorldFrame",
 
 		-- Global Constants
 		"SOUNDKIT",

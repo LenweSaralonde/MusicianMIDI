@@ -517,6 +517,12 @@ function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 		MusicianMIDIKeyboard:Toggle()
 		return
 	end
+
+	-- Override standard Toggle UI to keep the keyboard visible on screen
+	if down and GetBindingFromClick(keyValue) == "TOGGLEUI" and not InCombatLockdown() then
+		ToggleFrame(UIParent)
+		return true
+	end
 end
 
 --- Key up/down handler, from MIDI piano keyboard
@@ -800,7 +806,23 @@ function MusicianMIDIPianoKeyTemplate_OnLoad(self)
 	self.isFirst = false
 	self.isLast = true
 	self.down = false
+
+	-- Keep the live keyboard visible when the UI is hidden
+
+	UIParent:HookScript("OnHide", function()
+		MusicianMIDIKeyboard:SetParent(WorldFrame)
+		MusicianMIDIKeyboard:SetScale(UIParent:GetScale())
+	end)
+	UIParent:HookScript("OnShow", function()
+		MusicianMIDIKeyboard:SetParent(UIParent)
+		MusicianMIDIKeyboard:SetScale(1)
+		MusicianMIDIKeyboard:SetFrameStrata("DIALOG")
+	end)
 	self:SetScript("OnShow", function()
-		MusicianMIDI.Keyboard.SetVirtualKeyDown(self, self.down)
+		if self:GetParent() == WorldFrame then
+			self:SetScale(UIParent:GetScale())
+		else
+			self:SetScale(1)
+		end
 	end)
 end
