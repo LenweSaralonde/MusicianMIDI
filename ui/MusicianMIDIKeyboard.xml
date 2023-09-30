@@ -38,7 +38,7 @@
 
 	<!-- Main frame -->
 
-	<Frame name="MusicianMIDIKeyboard" inherits="MusicianDialogTemplate" enableKeyboard="true">
+	<Frame name="MusicianMIDIKeyboard" inherits="MusicianDialogTemplate" enableKeyboard="true" propagateKeyboardInput="false">
 
 		<Size x="640" y="208" />
 
