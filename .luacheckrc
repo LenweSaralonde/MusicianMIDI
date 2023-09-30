@@ -74,6 +74,7 @@ stds.wow = {
 		"IsMouseButtonDown",
 		"IsModifierKeyDown",
 		"GameTooltip_SetTitle",
+		"GetBindingFromClick",
 
 		-- Global Mixins and UI Objects
 		GameTooltip = {

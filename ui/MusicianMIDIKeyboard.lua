@@ -511,6 +511,12 @@ function MusicianMIDI.Keyboard.OnPhysicalKey(keyValue, down)
 			return
 		end
 	end
+
+	-- Allow to use the MIDI keyboard toggle binding to close it
+	if down and GetBindingFromClick(keyValue) == "MUSICIANMIDITOGGLE" then
+		MusicianMIDIKeyboard:Toggle()
+		return
+	end
 end
 
 --- Key up/down handler, from MIDI piano keyboard
