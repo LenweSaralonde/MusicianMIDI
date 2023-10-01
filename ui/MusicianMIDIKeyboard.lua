@@ -799,6 +799,12 @@ end
 -- Widget templates
 --
 
+--- MIDI keyboard OnLoad
+--
+function MusicianMIDIKeyboard_OnLoad(self)
+	self:DisableEscape()
+end
+
 --- Piano key template OnLoad
 --
 function MusicianMIDIPianoKeyTemplate_OnLoad(self)

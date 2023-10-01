@@ -17,7 +17,9 @@ function MusicianMIDI:OnEnable()
 	_G.BINDING_NAME_MUSICIANMIDITOGGLE = MusicianMIDI.Msg.COMMAND_LIVE_KEYBOARD
 
 	-- Incompatible Musician version
-	if MusicianMIDI.MUSICIAN_API_VERSION > (Musician.API_VERSION or 0) then
+	if MusicianMIDI.MUSICIAN_API_VERSION > (Musician.API_VERSION or 0) or
+		MusicianDialogTemplateMixin.DisableEscape == nil
+	then
 		Musician.Utils.Error(MusicianMIDI.Msg.ERROR_MUSICIAN_VERSION_TOO_OLD)
 		Musician.Utils.PrintError(MusicianMIDI.Msg.ERROR_MUSICIAN_VERSION_TOO_OLD)
 		return
