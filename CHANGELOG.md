@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.4.4
+------
+* Fixed blocked actions in combat lockdown.
+
 v1.4.3
 ------
 * Updated for WoW patch 10.1.7 and WoW Classic patch 1.14.4.
