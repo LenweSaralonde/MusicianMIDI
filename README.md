@@ -10,7 +10,7 @@ Feel free to join our [Discord server](https://discord.gg/ypfpGxK) for further a
 ## Table of contents
 
 - [Software installation](#software-installation)
-- [Configuration for macOS (optional)](#configuration-for-macos-optional)
+- [Configuration for macOS](#configuration-for-macos)
   1. [Function keys configuration](#1-function-keys-configuration)
   2. [Permissions](#2-permissions)
 - [Configure your MIDI input device](#configure-your-midi-input-device)
@@ -30,39 +30,51 @@ Feel free to join our [Discord server](https://discord.gg/ypfpGxK) for further a
 This add-on requires the external **Bome MIDI Translator** software to convert incoming MIDI messages from your controller into keystrokes that can be processed by the add-on.
 
 Bome MIDI Translator exists in 2 versions :
-* The **[Classic](https://www.bome.com/products/mtclassic)** version is the one that is **recommended** if you play on **Windows**. It's very simple and easy to use. It's a charged program for commercial use (€ 29) but you can use it for free without any limitation.
+* The **[Classic](https://www.bome.com/products/mtclassic)** version is the one that is **recommended** if you play on **Windows**. It's very simple and easy to use. It's a charged program for commercial use (€ 29) but you can use it for free without any limitation (remember WinRAR).
 * The **[Pro](https://www.bome.com/products/miditranslator)** version is the only option if you play on **macOS**. It's more complex to use than the classic version. It costs € 59 but you can use the free trial version provided that you don't mind restarting it every 20 minutes.
 
 You can also **request a free license** for the Classic or the Pro version by [sending a postcard to the developers](https://www.bome.com/postcardware).
 
-## Configuration for macOS (optional)
-Some extra configuration steps are required for the setup to properly work on macOS.
+## Configuration for macOS
+If you run macOS, a few extra configuration steps are required for this setup to work properly.
 
 ### 1. Function keys configuration
-MusicianMIDI needs to the function keys to be enabled. Also make sure you don't have any shortcut using them.
+MusicianMIDI needs the function keys to be enabled. After following these steps, make sure there is no other system shortcut using them.
 
-1. Go to **System Preferences** > **Keyboard**.
-2. Check **Use F1, F2, etc. keys as standard function keys**.
+#### For macOS version 13 (Ventura) and later
+1. Go to the **Apple** menu > **System Settings**.
+2. Click the **Keyboard** section in the left menu (or type `keyboard` in the search box).
+3. Click the **Keyboard Shortcuts…** button.
+4. Click **Function Keys** in the left menu.
+5. Enable **Use F1, F2, etc. keys as standard function keys**.
+6. Click **Mission Control** in the left menu.
+7. Uncheck the **Show Desktop** shortcut if the **F11** key is set (default).
+8. Click **Done**.
 
-	![Function keys](./img/macos-keyboard-function-keys-configuration.png)
-
-3. Go to the **Shortcuts** tab.
-4. Click **Mission Control** and **uncheck** the **Show Desktop** shortcut if the **F11** key is set (default).
-
-	![Shortcuts](./img/macos-keyboard-shortcuts-configuration.png)
+#### For macOS version 12 (Monterey) and earlier
+1. Go to the **Apple Menu** > **System Preferences** > **Keyboard**.
+2. Go to the **Keyboard** tab.
+3. Check **Use F1, F2, etc. keys as standard function keys**.
+4. Go to the **Shortcuts** tab.
+5. Click **Mission Control** and **uncheck** the **Show Desktop** shortcut if the **F11** key is set (default).
 
 ### 2. Permissions
-Bome MIDI Translator needs accessibility permissions to send keystrokes.
+Bome MIDI Translator Pro needs accessibility permissions to send keystrokes.
 
+#### For macOS version 13 (Ventura) and later
+1. Go to the **Apple** menu > **System Settings**.
+2. Click the **Privacy & Security** section in the left menu (or type `security` in the search box).
+3. Click **Accessibility**.
+4. Enable **Bome MIDI Translator Pro**.
+5. Validate using your system password or fingerprint.
+
+#### For macOS version 12 (Monterey) and earlier
 1. Go to **System Preferences** > **Security & Privacy**.
-2. Click on **Accessibility**.
-3. Click on the padlock 🔒 to allow modifications.
+2. Click **Accessibility**.
+3. Click the padlock 🔒 to allow modifications.
 4. Check **MIDI Translator Pro** in the list.
 
-	![Accessibility](./img/macos-accessibility-configuration.png)
-
 ## Configure your MIDI input device
-
 
 ### For Bome's MIDI Translator __Classic__:
 1. Connect your MIDI controller.
