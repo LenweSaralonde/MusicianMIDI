@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.4.6
+------
+* Updated documentation for macOS users.
+* Updated for WoW Classic patch 1.15.1.
+
 v1.4.5
 ------
 * Updated for WoW Retail patch 10.2.5 and WoW Classic patch 1.15.0.
