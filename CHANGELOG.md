@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.5.1
+------
+* Fixed keyboard window not draggable.
+
 v1.5.0
 ------
 * Updated for WoW Retail patch 10.2.7.
