@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.5.0
+------
+* Updated for WoW Retail patch 10.2.7.
+* Updated for WoW Cataclysm Classic patch 4.4.0.
+
 v1.4.6
 ------
 * Updated documentation for macOS users.
