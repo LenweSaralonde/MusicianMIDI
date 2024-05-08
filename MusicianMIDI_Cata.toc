@@ -1,0 +1,17 @@
+## Interface: 40400
+## Title: Musician MIDI
+## Author: LenweSaralonde
+## Notes: Perform live music in Musician using your MIDI keyboard
+## Version: 1.4.6
+## RequiredDeps: Musician
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: MusicianMIDI_Storage
+
+core\MusicianMIDI.lua
+
+constants\MusicianMIDI.Constants.lua
+
+locale\locale.xml
+
+ui\MusicianMIDIKeyboard.xml
