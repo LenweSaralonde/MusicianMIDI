@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v1.5.2
+------
+* Updated for The War Within prepatch.
+* Updated for WoW Classic patch 1.15.3.
+
 v1.5.1
 ------
 * Fixed keyboard window not draggable.
