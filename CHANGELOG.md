@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.5.3
+------
+* Updated for WoW retail patch 11.0.2.
+
 v1.5.2
 ------
 * Updated for The War Within prepatch.
