@@ -1,4 +1,4 @@
-## Interface: 40400
+## Interface: 40401
 ## Title: Musician MIDI
 ## Author: LenweSaralonde
 ## Notes: Perform live music in Musician using your MIDI keyboard
