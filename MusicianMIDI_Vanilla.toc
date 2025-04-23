@@ -2,7 +2,7 @@
 ## Title: Musician MIDI
 ## Author: LenweSaralonde
 ## Notes: Perform live music in Musician using your MIDI keyboard
-## Version: 1.5.5
+## Version: 1.5.6
 ## RequiredDeps: Musician
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
