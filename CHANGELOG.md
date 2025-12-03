@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.6.2
+------
+* Updated for WoW Retail 11.2.7, MoP Classic 5.5.2 and Classic Era 1.15.8.
+
 v1.6.1
 ------
 * Updated for WoW retail patch 11.2.
