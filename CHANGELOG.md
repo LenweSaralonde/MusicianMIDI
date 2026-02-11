@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.7.1
+------
+* TOC bump for Wow Retail 12.0.1.
+
 v1.7.0
 ------
 * TOC bump for WoW Midnight 12.0.0 prepatch.
