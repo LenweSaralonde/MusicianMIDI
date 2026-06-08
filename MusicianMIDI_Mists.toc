@@ -1,4 +1,4 @@
-## Interface: 50503
+## Interface: 50504
 ## Title: Musician MIDI
 ## Author: LenweSaralonde
 ## Notes: Perform live music in Musician using your MIDI keyboard
