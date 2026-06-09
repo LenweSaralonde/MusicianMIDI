@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v1.7.3
+------
+* Updated for Wow Retail 12.0.7 and MoP Classic 5.5.4.
+
 v1.7.2
 ------
 * Updated for Wow Retail 12.0.5.
