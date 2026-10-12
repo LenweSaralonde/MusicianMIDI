@@ -72,37 +72,37 @@
 
 			<!-- Upper instrument selector -->
 
-			<Frame name="$parentUpperInstrument" parentKey="upperInstrumentDropdown" inherits="MusicianInstrumentDropdownTemplate">
+			<DropdownButton name="$parentUpperInstrument" parentKey="upperInstrumentDropdown" inherits="MusicianInstrumentDropdownTemplate">
 				<Anchors>
-					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentPianoKeys" />
-					<Anchor point="RIGHT" x="-5" />
+					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentPianoKeys" y="5" />
+					<Anchor point="RIGHT" x="-21" />
 				</Anchors>
-			</Frame>
+			</DropdownButton>
 
 			<!-- Upper transpose selector -->
 
-			<Frame name="$parentUpperTranspose" parentKey="upperTransposeDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
+			<DropdownButton name="$parentUpperTranspose" parentKey="upperTransposeDropdown" inherits="MusicianDropdownTemplate">
 				<Anchors>
-					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentUpperInstrument" x="32" />
+					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentUpperInstrument" x="-2" />
 				</Anchors>
-			</Frame>
+			</DropdownButton>
 
 			<!-- Lower transpose selector -->
 
-			<Frame name="$parentLowerTranspose" parentKey="lowerTransposeDropdown" inherits="MusicianDropDownMenuTooltipTemplate">
+			<DropdownButton name="$parentLowerTranspose" parentKey="lowerTransposeDropdown" inherits="MusicianDropdownTemplate">
 				<Anchors>
-					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentPianoKeys" />
-					<Anchor point="LEFT" x="5" />
+					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentPianoKeys" y="5" />
+					<Anchor point="LEFT" x="22" />
 				</Anchors>
-			</Frame>
+			</DropdownButton>
 
 			<!-- Lower instrument selector -->
 
-			<Frame name="$parentLowerInstrument" parentKey="lowerInstrumentDropdown" inherits="MusicianInstrumentDropdownTemplate">
+			<DropdownButton name="$parentLowerInstrument" parentKey="lowerInstrumentDropdown" inherits="MusicianInstrumentDropdownTemplate">
 				<Anchors>
-					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentLowerTranspose" x="-32" />
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentLowerTranspose" x="2" />
 				</Anchors>
-			</Frame>
+			</DropdownButton>
 
 			<!-- Live play button -->
 
@@ -130,7 +130,7 @@
 				<FontString name="$parentUpperLabel" parentKey="upperLabel" inherits="GameFontHighlight" justifyh="LEFT">
 					<Size x="250" y="32" />
 					<Anchors>
-						<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeTo="$parentUpperTranspose" x="20" />
+						<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeTo="$parentUpperTranspose" />
 					</Anchors>
 				</FontString>
 
@@ -139,7 +139,7 @@
 				<FontString name="$parentLowerLabel" parentKey="lowerLabel" inherits="GameFontHighlight" justifyh="LEFT">
 					<Size x="250" y="32" />
 					<Anchors>
-						<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeTo="$parentLowerTranspose" x="20" />
+						<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeTo="$parentLowerTranspose" />
 					</Anchors>
 				</FontString>
 			</Layer>

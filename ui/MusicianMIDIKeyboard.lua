@@ -99,26 +99,18 @@ local function initLayerControls(layer)
 		transposeSelector.index = index
 		Musician.Live.AllNotesOff(layer)
 		transpose[layer] = (-index + 4) * 12
-		MSA_DropDownMenu_SetText(transposeSelector, transposeValues[index])
+		transposeSelector:OverrideText(transposeValues[index])
 	end
 
-	transposeSelector.OnClick = function(self, arg1)
-		transposeSelector.SetIndex(arg1)
+	local isTransposeSelected = function(index)
+		return transposeSelector.index == index
 	end
 
-	transposeSelector.GetItems = function()
-		local info = MSA_DropDownMenu_CreateInfo()
-		info.func = transposeSelector.OnClick
-
+	transposeSelector:SetupMenu(function(_, rootDescription)
 		for index, label in pairs(transposeValues) do
-			info.text = label
-			info.arg1 = index
-			info.checked = transposeSelector.index == index
-			MSA_DropDownMenu_AddButton(info)
+			rootDescription:CreateRadio(label, isTransposeSelected, transposeSelector.SetIndex, index)
 		end
-	end
-
-	MSA_DropDownMenu_Initialize(transposeSelector, transposeSelector.GetItems)
+	end)
 	transposeSelector.SetValue(transpose[layer])
 end
 
@@ -402,17 +394,17 @@ function MusicianMIDI.Keyboard.Init()
 
 	-- Upper instrument selector
 	MusicianMIDIKeyboard.upperLabel:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.UPPER])
-	MSA_DropDownMenu_SetWidth(MusicianMIDIKeyboardUpperInstrument, 165)
+	MusicianMIDIKeyboardUpperInstrument:SetWidth(183)
 
 	-- Lower instrument selector
 	MusicianMIDIKeyboard.lowerLabel:SetText(Musician.Msg.LAYERS[Musician.KEYBOARD_LAYER.LOWER])
-	MSA_DropDownMenu_SetWidth(MusicianMIDIKeyboardLowerInstrument, 165)
+	MusicianMIDIKeyboardLowerInstrument:SetWidth(183)
 
 	-- Upper transpose selector
-	MSA_DropDownMenu_SetWidth(MusicianMIDIKeyboardUpperTranspose, 40)
+	MusicianMIDIKeyboardUpperTranspose:SetWidth(58)
 
 	-- Lower transpose selector
-	MSA_DropDownMenu_SetWidth(MusicianMIDIKeyboardLowerTranspose, 40)
+	MusicianMIDIKeyboardLowerTranspose:SetWidth(58)
 
 	-- Split button
 	MusicianMIDIKeyboardSplitButton:SetText(MusicianMIDI.Msg.SPLIT_KEYBOARD)
@@ -671,14 +663,14 @@ function MusicianMIDI.Keyboard.SetSplit(isSplit)
 	Musician.Live.SetSustain(false, LAYER.UPPER)
 	Musician.Live.SetSustain(false, LAYER.LOWER)
 	if isSplit then
-		MSA_DropDownMenu_EnableDropDown(frame.lowerInstrumentDropdown)
-		MSA_DropDownMenu_EnableDropDown(frame.lowerTransposeDropdown)
+		frame.lowerInstrumentDropdown:Enable()
+		frame.lowerTransposeDropdown:Enable()
 		frame.lowerLabel:SetFontObject(GameFontHighlight)
 		frame.splitKeyEditBox:SetText(Musician.Sampler.NoteName(MusicianMIDI.Keyboard.GetSplitKey()))
 		frame.splitKeyEditBox:Enable()
 	else
-		MSA_DropDownMenu_DisableDropDown(frame.lowerInstrumentDropdown)
-		MSA_DropDownMenu_DisableDropDown(frame.lowerTransposeDropdown)
+		frame.lowerInstrumentDropdown:Disable()
+		frame.lowerTransposeDropdown:Disable()
 		frame.lowerLabel:SetFontObject(GameFontDisable)
 		frame.splitKeyEditBox:SetText('--')
 		frame.splitKeyEditBox:Disable()
