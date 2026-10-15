@@ -161,12 +161,12 @@
 
 			<!-- Split point edit box -->
 
-			<EditBox name="$parentSplitKeyEditBox" parentKey="splitKeyEditBox" inherits="InputBoxTemplate" letters="3" historyLines="0" autofocus="false">
-				<Size x="40" y="22" />
+			<EditBox name="$parentSplitKeyEditBox" parentKey="splitKeyEditBox" inherits="MusicianEditBoxTemplate" letters="3" historyLines="0" autoFocus="false">
+				<Size x="48" y="34" />
 				<Anchors>
-					<Anchor point="BOTTOM" y="7" x="2" relativePoint="TOP" relativeTo="$parentPianoKeys" />
+					<Anchor point="CENTER" y="18" x="0" relativePoint="TOP" relativeTo="$parentPianoKeys" />
 				</Anchors>
-				<FontString inherits="GameFontHighlightSmall" justifyH="CENTER" justifyV="MIDDLE" />
+				<FontString inherits="GameFontHighlight" justifyH="CENTER" justifyV="MIDDLE" />
 			</EditBox>
 		</Frames>
 
