@@ -20,6 +20,8 @@
 ## Category-zhCN: 角色扮演
 ## Category-zhTW: 角色扮演
 ## Group: Musician
+## X-Curse-Project-ID: 386438
+## X-Wago-ID: Xb6X8w6p
 
 core\MusicianMIDI.lua
 
