@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.10.0
+-------
+* Updated for Musician 1.9.18.0.
+* Reworked edit boxes.
+* WoW Forever compatibility.
+
 v1.9.0
 ------
 * Remade dropdowns using the standard API.
